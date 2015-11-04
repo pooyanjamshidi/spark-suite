@@ -10,7 +10,7 @@ A suite for automated configuration testing, automated topology deployment and a
 
 To build and run :
 
-    git clone git@gitlab.doc.ic.ac.uk:hz114/Deployment-and-Benchmarking-of-Apache-Spark.git
+    git clone git@github.com:pooyanjamshidi/spark-suite.git
     cd spark-monitor
     mvn package 
     cd bin
