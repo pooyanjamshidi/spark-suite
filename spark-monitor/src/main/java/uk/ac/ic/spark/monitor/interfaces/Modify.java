@@ -1,3 +1,5 @@
+package uk.ac.ic.spark.monitor.interfaces;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.Scanner;
 public class Modify implements ConfigModificatorInterface{
 
 	private ArrayList<String> paras = new ArrayList<String>();
-	@Override
+
 	public void modifyConfig(Map<String, String> config) {
 		// TODO Auto-generated method stub
 		
