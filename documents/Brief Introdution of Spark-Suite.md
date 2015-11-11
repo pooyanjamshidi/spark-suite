@@ -31,4 +31,25 @@ There are three ways to use this tool:
 
 	You can select the params in the web page and then input the values you want. After uploading the jar file which will be executed and pressing the submit button, spark jobs will be submited. After the execution, digrams of performance figures and CVS files will be generated.
 	
+## 3. Structure
+
+This tool has two parts:
+
+1. Spark-Suite.jar 
+
+	This part has the following functions:
 	
+		1. Changing the configuration of Spark.
+		2. Submitting Spark jobs.
+		3. Collectting the performance figures of Spark jobs and generate CVS files.
+		4. Providing Restful API
+		
+2. Web-UI
+
+	This is not only the user interface of Spark-Suite, but also one Restful AIP Clint of Spark-Suite.jar.
+	
+	This part has the following functions:
+	
+		1. The user can choose params, input values and upload jar file in the website
+		2. Invoking the Restful API of Spark-Suite.jar to submit Spark job.
+		3. Generating digrams of the performance figures of Spark jobs and providing the download of CVS files.
