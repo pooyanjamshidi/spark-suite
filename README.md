@@ -3,7 +3,7 @@ A suite for automated configuration testing, automated topology deployment and a
 
 ## Online Documentation
 
-1. Method and Plan Report
+1. [Brief Introdution of Spark-Suite](https://github.com/pooyanjamshidi/spark-suite/blob/master/documents/Brief%20Introdution%20of%20Spark-Suite.md)
 
 
 ## Building and Running SMP
@@ -26,13 +26,9 @@ If you want to stop it, you should run:
 
 	sh stop.sh	
 
-## Structure of SMP
+## Structure of  Spark-Suite
 
-The main entry is uk.ac.ic.spark.monito.Main. When Main runs it stats several independent services such as ClusterMonitorService, ConfigRestService and so on.  Those services are implements of:
 
-	com.google.common.util.concurrent.service. 
-
-If you know noting of it, don't worry. The only thing you need to know is to implement the run interface.  
 
 
 ## Environment and Dependence
