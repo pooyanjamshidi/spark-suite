@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor;
+package uk.ac.ic.spark.monitor.main;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.ServiceManager;
