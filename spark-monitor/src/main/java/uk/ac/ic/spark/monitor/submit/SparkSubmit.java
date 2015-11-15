@@ -48,7 +48,7 @@ public class SparkSubmit {
 
         // identify that you will be using Spark as YARN mode
         System.setProperty("SPARK_YARN_MODE", "true");
-//Test
+//      Just for test
         // create an instance of SparkConf object
         SparkConf sparkConf = new SparkConf();
 
