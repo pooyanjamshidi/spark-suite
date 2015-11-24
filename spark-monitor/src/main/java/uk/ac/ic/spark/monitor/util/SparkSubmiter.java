@@ -1,11 +1,11 @@
-package uk.ac.ic.spark.monitor.submit;
+package uk.ac.ic.spark.monitor.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.spark.SparkConf;
 import org.apache.spark.deploy.yarn.Client;
 import org.apache.spark.deploy.yarn.ClientArguments;
 
-public class SparkSubmit {
+public class SparkSubmiter {
 
     public static void main(String[] arguments) throws Exception {
 

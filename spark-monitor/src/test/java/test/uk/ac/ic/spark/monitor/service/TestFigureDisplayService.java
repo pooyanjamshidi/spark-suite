@@ -12,6 +12,33 @@ public class TestFigureDisplayService {
         FigureDisplayService figureDisplayService = new FigureDisplayService();
         assertEquals(1, figureDisplayService.figureDisplay());
 
+
+    }
+
+    @Test
+    public void testFigureResult() {
+        FigureDisplayService figureDisplayService = new FigureDisplayService();
+        assertEquals(1, figureDisplayService.figureDisplay());
+
+
+    }
+
+
+    @Test
+    public void testSum() {
+        FigureDisplayService figureDisplayService = new FigureDisplayService();
+        assertEquals(1, figureDisplayService.figureDisplay());
+
+
+    }
+
+
+    @Test
+    public void testAvg() {
+        FigureDisplayService figureDisplayService = new FigureDisplayService();
+        assertEquals(100, 101);
+
+
     }
 
 }

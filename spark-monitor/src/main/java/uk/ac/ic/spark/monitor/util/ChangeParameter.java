@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor.interfaces;
+package uk.ac.ic.spark.monitor.util;
 
 
 import java.io.*;
@@ -10,13 +10,13 @@ import java.util.Scanner;
 import uk.ac.ic.spark.monitor.exceptions.*;
 
 
-public class ChangeParameter implements ConfigModificatorInterface{
+public class ChangeParameter  {
 
 	private boolean propExisted = false;
 	BufferedReader br = null;
 	BufferedWriter bw = null;
 
-	@Override
+
 	public void modifyConfig(Map<String, String> config){
 		// TODO Auto-generated method stub
 		//Traverse config file

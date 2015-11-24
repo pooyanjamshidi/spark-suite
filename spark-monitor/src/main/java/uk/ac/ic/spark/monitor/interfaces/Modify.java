@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Modify implements ConfigModificatorInterface{
+public class Modify {
 
 	private ArrayList<String> paras = new ArrayList<String>();
 
