@@ -1,0 +1,189 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tool GUI</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link href="css/index.css" rel="stylesheet">
+</head>
+<body>
+
+    <div class = "container-fluid" id="big-container">
+		
+<!-- **************************************************************************************-->
+<!-- ******************************NAVIGATION BAR******************************************-->
+<!-- **************************************************************************************-->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Benchmarking of Apache Spark</a>
+            </div>
+            <ul class="nav navbar-right navbar-top">
+                <li>
+                    <a href="#">Something</a> 
+                </li>
+                <li>
+                    <a href="#">Something</a> 
+                </li>
+                <li>
+                    <a href="#">Something</a> 
+                </li>
+            </ul>
+<!-- **************************************************************************************-->
+<!-- ******************************NAVIGATION LEFT BAR*************************************-->
+<!-- **************************************************************************************-->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav navbar-left">
+                    <li class="active">
+                        <a href="index.html"> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="charts.html"> Pie Charts</a>
+                    </li>
+                    <li>
+                        <a href="CSV_files.html"> CSV Files</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+<!-- **************************************************************************************-->
+<!-- ******************************CONTAINER***********************************************-->
+<!-- **************************************************************************************-->
+        <div id="small-container">
+			<div class="row">
+				<div class="col-sm-6">
+					<h1 class="page-header"> Dashboard </h1>
+				</div>
+			</div>
+			<div class="container-fluid">	
+				<div class="col-sm-6">
+					<form role="form">
+						<div class="submitButn panel panel-success">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="container-fluid">
+											<div class="form-group">
+											  <label>Parameters:</label>
+											  <select multiple class="form-control">
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>6</option>
+												<option>7</option>
+												<option>8</option>
+												<option>9</option>
+												<option>10</option>
+												<option>11</option>
+												<option>12</option>
+											  </select>
+											</div>	
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="container-fluid">
+											<div class="form-group">
+											  <label>Values:</label>
+											  <select multiple class="form-control">
+												<option>1</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+												<option>5</option>
+												<option>6</option>
+												<option>7</option>
+												<option>8</option>
+												<option>9</option>
+												<option>10</option>
+												<option>11</option>
+												<option>12</option>
+											  </select>
+											</div>
+										</div>
+									</div>				
+								</div>
+							</div>
+							<div class="panel-footer">
+								<div class="row">
+									<div class="col-sm-offset-5 col-sm-12">
+										<button type="submit" class="btn btn-success">Submit</button>
+									</div>	
+								</div>
+							</div>
+						</div>
+					</form>
+					<div class="row">
+						<div class="col-sm-4">
+							<div class="panel panel-info">
+								<div class="panel-heading">
+									<h4>Upload Your Files</h4>
+								</div>
+								<div class="panel-body">
+									<button type="button" class="btn btn-info">Upload</button>
+								</div>
+							</div>
+						</div>
+					</div>	
+				</div>
+				<div class="col-sm-6">
+					<form role="form">
+						<div class="row">						
+							<div class="submitButn panel panel-success">
+								<div class="panel-heading">
+									<h3 class="panel-title">Provide us with some feedback</h3>
+								</div>
+								<div class="panel-body">
+									<div class="form-group">
+										<textarea class="form-control" id="message" name="message" placeholder="Write your text..." rows="7"></textarea>
+									</div>
+								</div>
+								<div class="panel-footer">
+									<div class="row">
+										<div class="col-sm-offset-4">
+											<button type="submit" class="btn btn-success">Submit Your feedback</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>					
+					</form>
+                    <div class="row">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Preview of your configuration file</h3>
+                            </div>
+                            <div class="panel-body">
+								<p>
+								Lorem ipsum dolor sit amet,
+								consectetur adipiscing elit.
+								Nunc sed diam sit amet neque malesuada mattis. 
+								Integer pretium, libero nec porta varius, sem leo maximus tellus, in egestas leo erat at ex.
+								Sed sed posuere diam, sit amet molestie nunc. Aenean at purus vitae justo rutrum scelerisque.
+								Nam condimentum, erat et interdum fringilla, lacus leo porttitor ligula, nec sodales nisi diam eu mi.
+								Nunc est augue, elementum sit amet nunc eget, lobortis porta nisl. Vestibulum et porta metus, non gravida elit. 
+								Sed pretium consectetur nunc, sed viverra arcu fermentum sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+								Nam scelerisque a lacus at feugiat. Maecenas posuere, ante et facilisis convallis, dui felis accumsan tellus, eget malesuada purus arcu sit amet felis.
+								Nam id tincidunt ante. Quisque vel leo ultrices, varius felis ac, consequat tellus. Suspendisse potenti.
+								</p>
+                            </div>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
+    </div>
+</body>
+
+</html>
