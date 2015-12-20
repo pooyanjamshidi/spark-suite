@@ -8,7 +8,10 @@ import org.apache.commons.cli.*;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.ac.ic.spark.monitor.util.ChangeParameter;
+import uk.ac.ic.spark.monitor.util.SparkRequester;
 
+import java.io.IOException;
 import java.util.*;
 
 public class InstantMain {
@@ -32,11 +35,12 @@ public class InstantMain {
 
             String paramsAndValues = line.getOptionValue("P");
 
-            Validate.matchesPattern(paramsAndValues, "\\[(\\w*=(\\w*,)*\\w*;)*\\w*=(\\w*,)*\\w*\\]",
-                    paramsAndValues + " does not look like [p1=v11,v12;p2=v21,v22]");
+            Validate.matchesPattern(paramsAndValues, "(.*=(.*,)*.*;)*.*=(.*,)*.*",
+                    paramsAndValues + " does not look like p1=v11,v12;p2=v21,v22");
 
 
             Multimap<String, String> paramsMultiMap = parseParams(Splitter.on(";")
+                    .trimResults()
                     .trimResults(CharMatcher.is('['))
                     .trimResults(CharMatcher.is(']'))
                     .split(paramsAndValues)
@@ -51,6 +55,17 @@ public class InstantMain {
 
             for(Map<String, String> paramsMap : combinedParams){
                 //TODO:: change configfile and submit job.
+                log.info("Change config params map: " + paramsMap);
+//                ChangeParameter changeParameter = new ChangeParameter();
+//                changeParameter.modifyConfig(paramsMap);
+                log.info("Submit Spark Job: Fake Now");
+                log.info("Get application ID: application_1446044705002_0009");
+//                log.info("");
+
+
+                SparkRequester sparkRequester = new SparkRequester();
+
+                log.info("JobInfo: " + sparkRequester.getJobsList("application_1446044705002_0009"));
             }
 
         } catch( ParseException exp ) {
@@ -64,6 +79,8 @@ public class InstantMain {
             System.err.println(errorMessage);
             log.error(errorMessage);
             printHelp();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,7 +94,7 @@ public class InstantMain {
         Option paramsOpt = Option.builder("P").hasArgs()
                 .longOpt("params")
                 .required()
-                .argName("[p1=v11,v12;p2=v21,v22]")
+                .argName("p1=v11,v12;p2=v21,v22")
                 .hasArg()
                 .desc("params list")
                 .build();
@@ -98,7 +115,7 @@ public class InstantMain {
 
 
 
-    private static Multimap<String, String>  parseParams(Iterator<String> paramNamesAndValuesIterator){
+    public static Multimap<String, String>  parseParams(Iterator<String> paramNamesAndValuesIterator){
 
         Multimap<String, String> paramsMultiMap = HashMultimap.create();
 
@@ -119,7 +136,7 @@ public class InstantMain {
     }
 
 
-    private static List<Map<String, String>> combineAllParams(Multimap<String, String> paramsMultiMap){
+    public static List<Map<String, String>> combineAllParams(Multimap<String, String> paramsMultiMap){
         List<Map<String, String>> combinedParams = new ArrayList<Map<String, String>>();
 
         for(String paramName : paramsMultiMap.keySet()){

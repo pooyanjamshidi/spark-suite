@@ -53,7 +53,7 @@ public class ChangeParameter  {
 	 */
 	private void isProperty(String property) throws FileNotFoundException, PropertyNotDefinedExceptions{
 		boolean isProp = false;
-		File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
+		File file = new File("/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/ConfigurationParameter.txt");
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 
@@ -65,7 +65,7 @@ public class ChangeParameter  {
 		}
 
 		if(!isProp){
-			throw new PropertyNotDefinedExceptions();
+			throw new PropertyNotDefinedExceptions(property);
 		}
 
 	}
@@ -78,15 +78,15 @@ public class ChangeParameter  {
 	private String getFileName(String property){
 		String fileName = null;
 		if(property.contains("_")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template";
+			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/spark-env.sh.template";
 		}
 
 		if(property.contains(".")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template";
+			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/spark-defaults.conf.template";
 		}
 
 		if(property.contains("log")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template";
+			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/log4j.properties.template";
 		}
 		return fileName;
 
@@ -206,10 +206,10 @@ public class ChangeParameter  {
 	//test
     public static void main(String[] args){
 		Map<String, String> propertyList = new HashMap<String, String>();
-		propertyList.put("SPARK_CONF_DIR", "test1ww");
-		propertyList.put("SPARK_LOG_DIR", "test5");
-		propertyList.put("SPARK_IDENT_STRING", "test3");
-		propertyList.put("SPARK_NICENESS", "test1rt");
+//		propertyList.put("spark.shuffle.io.maxRetries", "1");
+//		propertyList.put("SPARK_LOG_DIR", "test5");
+//		propertyList.put("SPARK_IDENT_STRING", "test3");
+//		propertyList.put("SPARK_NICENESS", "test1rt");
 		ChangeParameter changeParameter = new ChangeParameter();
 		changeParameter.modifyConfig(propertyList);
 	}

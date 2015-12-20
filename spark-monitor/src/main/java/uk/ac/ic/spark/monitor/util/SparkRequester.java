@@ -29,7 +29,10 @@ public class SparkRequester {
         }
 
     }
-
+    public List<Map<String, Object>> getJobsList(String appID) throws IOException {
+        return  getJobsList("http://spark1.haoran.io:18080/api/v1/applications/",
+                appID);
+    }
 
     private static List<Map<String, Object>> getJobsList(String url, String appID) throws IOException {
         String jobListString = url + appID + "/jobs";

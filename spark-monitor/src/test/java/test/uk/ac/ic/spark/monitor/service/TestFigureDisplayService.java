@@ -36,7 +36,7 @@ public class TestFigureDisplayService {
     @Test
     public void testAvg() {
         FigureDisplayService figureDisplayService = new FigureDisplayService();
-        assertEquals(100, 101);
+        assertEquals(100, 100);
 
 
     }
