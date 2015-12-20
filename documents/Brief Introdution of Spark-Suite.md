@@ -39,11 +39,11 @@ This tool has two parts:
 
 	This part has the following functions:
 	
-		1. Parsing and combining the input params.
-		2. Changing the configuration of Spark.
+		1. Parsing and combining the input params.(Finished)
+		2. Changing the configuration of Spark.(Finished)
 		2. Submitting Spark jobs.
-		3. Collecting the performance figures of Spark jobs and generate CVS files.
-		4. Providing Restful API
+		3. Collecting the performance figures of Spark jobs and generate CVS files.(In process)
+		4. Providing Restful API(In process)
 		
 2. Web-UI
 
@@ -51,7 +51,7 @@ This tool has two parts:
 	
 	This part has the following functions:
 	
-		1. The user can choose params, input values and upload jar file in the website
+		1. The user can choose params, input values and upload jar file in the website (Finished initial UI and In process)
 		2. Invoking the Restful API of Spark-Suite.jar to submit Spark job.
 		3. Generating diagrams of the performance figures of Spark jobs and providing the download of CVS files.
 
