@@ -1,3 +1,4 @@
+package uk.ac.ic.spark.monitor.util;
 // import required classes and interfaces
 import org.apache.spark.deploy.yarn.Client;
 import org.apache.spark.deploy.yarn.ClientArguments;
@@ -34,7 +35,7 @@ public class SubmitSparkJobToYARN {
                 "wordcount.JavaWordCount",
 
                 //"user already add the dependency into JAR"
-                //"--arg"
+                //"--addJAR"
 
                 //argument of the program
                 //TODO: get arg from front-end, hard code here
@@ -45,8 +46,14 @@ public class SubmitSparkJobToYARN {
 
         };
 
+
         // create a Hadoop Configuration object
         Configuration config = new Configuration();
+        config.set("fs.defaultFS", "hdfs://146.169.46.48:9000");// namenode
+        config.set("mapreduce.framework.name","yarn"); // yarn
+        config.set("yarn.resourcemanager.address","146.169.46.48:8032"); // resourcemanager
+        config.set("yarn.resourcemanager.scheduler.address", "146.169.46.48:8030");
+        config.set("mapreduce.jobhistory.address","node101:10020");
 
         // identify that you will be using Spark as YARN mode
         System.setProperty("SPARK_YARN_MODE", "true");
