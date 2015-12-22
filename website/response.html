@@ -1,0 +1,47 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Tool GUI</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+ 
+  
+  <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+  
+  <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+</head>
+<body>  
+ <table id="parameters" class="display" cellspacing="0" width="100%">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          
+                        </tr>
+                      </thead>
+                     
+                      <tbody>
+                       
+                          <tr><td onClick="a()">spark.files.fetchTimeout</td></tr>
+                          <tr><td>spark.driver.extraClassPath</td></tr>
+                          <tr><td>spark.shuffle.service.enabled</td></tr>
+                          <tr><td>spark.shuffle.service.port</td></tr>
+                          <tr><td>spark.ui.retainedStages</td></tr>
+                      
+                      </tbody>
+                    </table>
+</body>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+    $('#parameters').DataTable();
+});
+	
+	function test(){
+		
+	}
+</script>
+</html>

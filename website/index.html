@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tool GUI</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="css/index.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+<script src="util.js"></script>
+</head>
+<body>
+<div class = "container-fluid" id="big-container"> 
+  
+  <!-- **************************************************************************************--> 
+  <!-- ******************************NAVIGATION BAR******************************************--> 
+  <!-- **************************************************************************************-->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand" href="index.html">Benchmarking of Apache Spark</a> </div>
+    <ul class="nav navbar-right navbar-top">
+      <li> <a href="#">Something</a> </li>
+      <li> <a href="#">Something</a> </li>
+      <li> <a href="#">Something</a> </li>
+    </ul>
+    <!-- **************************************************************************************--> 
+    <!-- ******************************NAVIGATION LEFT BAR*************************************--> 
+    <!-- **************************************************************************************-->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li class="active"> <a href="index.html"> Dashboard</a> </li>
+        <li> <a href="charts.html"> Pie Charts</a> </li>
+        <li> <a href="CSV_files.html"> CSV Files</a> </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- **************************************************************************************--> 
+  <!-- ******************************CONTAINER***********************************************--> 
+  <!-- **************************************************************************************-->
+  <p></p>
+  <div id="small-container">
+    <div class="row">
+      <div class="col-sm-6">
+        <h1 class="page-header"> Dashboard </h1>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div class="col-sm-12">
+        <h3 style="font:bold;">
+        Choose parameter to change, and then select options to deploy topologies
+        </h1>
+        <form role="form" action="http://spark1.haoran.io:18080/api/v1/applications/application_1446044705002_0009/jobs">
+          <div class="submitButn panel panel-success">
+            <div class="panel-body">
+              <div class="row">
+                <!-- **************************************************************************************-->
+                <div class="col-sm-6">
+                  <div class="panel panel-primary" style="height:500px;">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Parameter list</h3>
+                    </div>
+                    <div class="panel-body">
+                      <table id="parameters" class="display" cellspacing="0" width="100%">
+                        <thead>
+                         <tr>
+                            <th>Please choose parameter</th>
+                         </tr>
+                       </thead>
+                      </table>
+                   </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+               <div class="col-sm-6">
+                  <div class="panel panel-success" style="height:500px;">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Options</h3>
+                    </div>
+                    <div class="panel-body">
+                      <h6>Parameter selected: </h6>
+                      <p id="para_name" style="color: green">None</p>
+                      <table id="values" class="display" cellspacing="0" width="100%">
+                        <thead style="display:none;">
+                          <tr>
+                            <th></th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <hr/>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+              </div>
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-offset-5 col-sm-12">
+                  <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="panel panel-warning">
+              <div class="panel-heading">
+                <h3 class="panel-title">Preview of your configuration file</h3>
+              </div>
+              <div class="panel-body">
+                <p> Lorem ipsum dolor sit amet,
+                  consectetur adipiscing elit.
+                  Nunc sed diam sit amet neque malesuada mattis. 
+                  Integer pretium, libero nec porta varius, sem leo maximus tellus, in egestas leo erat at ex.
+                  Sed sed posuere diam, sit amet molestie nunc. Aenean at purus vitae justo rutrum scelerisque.
+                  Nam condimentum, erat et interdum fringilla, lacus leo porttitor ligula, nec sodales nisi diam eu mi.
+                  Nunc est augue, elementum sit amet nunc eget, lobortis porta nisl. Vestibulum et porta metus, non gravida elit. 
+                  Sed pretium consectetur nunc, sed viverra arcu fermentum sed. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;
+                  Nam scelerisque a lacus at feugiat. Maecenas posuere, ante et facilisis convallis, dui felis accumsan tellus, eget malesuada purus arcu sit amet felis.
+                  Nam id tincidunt ante. Quisque vel leo ultrices, varius felis ac, consequat tellus. Suspendisse potenti. </p>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h4>Upload Your Files</h4>
+                </div>
+                <div class="panel-body">
+                  <button type="button" class="btn btn-info">Upload</button>
+                </div>
+              </div>
+            </div>
+            <!-- for displaying questionair -->
+            <div class="col-sm-offset-2 col-sm-4">
+              <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h4>Taking questionnaire</h4>
+                </div>
+                <div class="panel-body">
+                  <button type="button" class="btn btn-info" data-toggle="modal" data-target="#myModal">Questionnaire</button>
+                </div>
+              </div>
+            </div>
+            <!-- end of displaying questionair --> 
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg"> 
+    
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Questionnaire</h4>
+      </div>
+      <div class="modal-body">
+        <table class="col-sm-12">
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary" >
+                <div class="panel-heading" style="background-color: grey">
+                  <h4>Do you think the tool is useful?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question1 col-sm-offset-1 ">
+                    <input type="radio" name="optradio1">
+                    Agree</label>
+                  <label class="question1 col-sm-offset-2 ">
+                    <input type="radio" name="optradio1">
+                    Neither agree nor disagree</label>
+                  <label class="question1 col-sm-offset-2 ">
+                    <input type="radio" name="optradio1">
+                    Disagree</label>
+                </div>
+              </div>
+          </tr>
+          </td>
+          
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think the tool is useful?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question2 col-sm-offset-1 ">
+                    <input type="radio" name="optradio2">
+                    Agree</label>
+                  <label class="question2 col-sm-offset-2 ">
+                    <input type="radio" name="optradio2">
+                    Neither agree nor disagree</label>
+                  <label class="question2 col-sm-offset-2 ">
+                    <input type="radio" name="optradio2">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think this tool is easy to use?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question3 col-sm-offset-1 ">
+                    <input type="radio" name="optradio3">
+                    Agree</label>
+                  <label class="question3 col-sm-offset-2 ">
+                    <input type="radio" name="optradio3">
+                    Neither agree nor disagree</label>
+                  <label class="question3 col-sm-offset-2 ">
+                    <input type="radio" name="optradio3">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think the tool have good performance?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question4 col-sm-offset-1 ">
+                    <input type="radio" name="optradio4">
+                    Agree</label>
+                  <label class="question4 col-sm-offset-2 ">
+                    <input type="radio" name="optradio4">
+                    Neither agree nor disagree</label>
+                  <label class="question4 col-sm-offset-2 ">
+                    <input type="radio" name="optradio4">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Would you like to introduce this tool to your friend?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question5 col-sm-offset-1 ">
+                    <input type="radio" name="optradio5">
+                    Agree</label>
+                  <label class="question5 col-sm-offset-2 ">
+                    <input type="radio" name="optradio5">
+                    Neither agree nor disagree</label>
+                  <label class="question5 col-sm-offset-2 ">
+                    <input type="radio" name="optradio5">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
