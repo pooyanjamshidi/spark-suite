@@ -2,61 +2,172 @@ package uk.ac.ic.spark.monitor.servlet;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import org.apache.hadoop.conf.Configuration;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
 import org.apache.spark.deploy.yarn.Client;
 import org.apache.spark.deploy.yarn.ClientArguments;
 import uk.ac.ic.spark.monitor.main.InstantMain;
-import uk.ac.ic.spark.monitor.util.SparkRequester;
+import uk.ac.ic.spark.monitor.util.ChangeParameter;
+//import uk.ac.ic.spark.monitor.util.SparkRequester;
 
+import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
+@WebServlet(name = "SubmitServlet", urlPatterns = {"/upload"})
 
+@MultipartConfig(fileSizeThreshold=1024*1024*10,    // 10 MB
+        maxFileSize=1024*1024*50,          // 50 MB
+        maxRequestSize=1024*1024*100)      // 100 MB
 public class SubmitServlet extends HttpServlet {
     private static final Logger log = LogManager.getLogger(HttpServlet.class);
-    private final static Logger LOGGER =
+    private final static org.apache.logging.log4j.Logger LOGGER =
             LogManager.getLogger(SubmitServlet.class.getCanonicalName());
 
 
-    private static String getSubmittedFileName(Part part) {
-        for (String cd : part.getHeader("content-disposition").split(";")) {
-            if (cd.trim().startsWith("filename")) {
-                String fileName = cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-                return fileName.substring(fileName.lastIndexOf('/') + 1).substring(fileName.lastIndexOf('\\') + 1); // MSIE fix.
+    private String getFileName(Part part) {
+        final String partHeader = part.getHeader("content-disposition");
+        //LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
+        for (String content : part.getHeader("content-disposition").split(";")) {
+            if (content.trim().startsWith("filename")) {
+                return content.substring(
+                        content.indexOf('=') + 1).trim().replace("\"", "");
             }
         }
         return null;
     }
 
+
+    private static final String UPLOAD_DIR = "uploads";
     @Override
     protected void doPost(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException,
             IOException {
 
+        log.info("receive!");
+
+        //add the multipart config
+        MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
+        request.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
+
+
+        /*
+
+        Multimap<String, String> test = HashMultimap.create();
+        test.put("k1", "v11");
+        test.put("k1", "v12");
+        test.put("k2", "v21");
+        test.put("k2", "v22");
+
+        List testmap = InstantMain.combineAllParams(test);
+
+        log.info("combine!");
+        for(int i = 0; i < testmap.size(); i++){
+            log.info(testmap.get(i));
+        }
+        //log.info("combineMap:" + testmap.toString());
+        */
+
+
+
+        //TODO: for change configuration parameter
+        Multimap<String, String> keyVlues = HashMultimap.create();
+        //traverse ConfigurationParameter.txt, get which parameter had been change
+        File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
+        @SuppressWarnings("resource")
+        Scanner scanner = new Scanner(file);
+
+        while(scanner.hasNextLine()){
+            String line = scanner.nextLine();
+            //log.info(line);
+            String configParameter = request.getParameter(line);
+            log.info(configParameter);
+
+            if(configParameter == null){
+                continue;
+            }
+            else{
+                //add it into the propertyList
+                //key = line, configParameter = v1,v2,v3
+                //split on ","
+                Iterable<String> values = Splitter.on(",")
+                        .trimResults()
+                        .omitEmptyStrings()
+                        .split(configParameter);
+                //create key value pairs
+                for(String s:values){
+
+                    keyVlues.put(line,s);
+                    log.info("key before combine: " + line + " value before combine: " + s);
+
+                }
+            }
+        }
+
+        List combinekeyValues = InstantMain.combineAllParams(keyVlues);
+        Map<String, String> propertyList = new HashMap<String, String>();
+        log.info("Combine: " + combinekeyValues.toString());
+
+        for(int i = 0; i < combinekeyValues.size(); i++){
+            // Each combine run once
+            String keyValues = (String)combinekeyValues.get(i);
+            //split on "," "{", "}"
+            //get k1 = v1, k2 = v2, k3 = v3
+            Iterable<String> keysValues = Splitter.on(",")
+                    .trimResults()
+                    .trimResults(CharMatcher.is('{'))
+                    .trimResults(CharMatcher.is('}'))
+                    .split(keyValues);
+
+            for(String s : keysValues){
+                //split on "="
+                //add into property list
+                String[] keyValue = s.split("=");
+                propertyList.put(keyValue[0], keyValue[1]);
+                log.info("key: " + keyValue[0] + " value: " + keyValue[1]);
+            }
+
+            ChangeParameter changeParameter = new ChangeParameter();
+            changeParameter.modifyConfig(propertyList);
+        }
+
+
+
+        ////////////////////////////////////////////////////////////////////////
+
+        //add the multipart config
+        //MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
+        //request.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 
         // get the args pass to main class
         //String args[] = request.getParameterValues("argsList");
-        String arg = request.getParameter("arg");
+
+        String arg = request.getParameter("PARAMETERS");
+
+
+        log.info("arg: " + arg);
         // get main class
-        String mainClass = request.getParameter("main_class");
+        String mainClass = request.getParameter("mainClass");
+        log.info("mainClass: " + mainClass);
         // get the JAR file
         Part jarPart = request.getPart("file");
-        String fileName = getSubmittedFileName(jarPart);
-
+        String fileName = getFileName(jarPart);
+        log.info("fileName: " + fileName);
         OutputStream out = null;
         InputStream jarContent = null;
         final PrintWriter writer = response.getWriter();
@@ -95,10 +206,15 @@ public class SubmitServlet extends HttpServlet {
             if (writer != null) {
                 writer.close();
             }
+
+            response.getWriter().write("Upload Successfully!!");
         }
         //get content of JAR file
         //give the local jar path to the JOB
 
+
+
+        /*
         String[] args = new String[]{
                 //the name of the application
                 "--name",
@@ -160,9 +276,10 @@ public class SubmitServlet extends HttpServlet {
         // submit Spark job to YARN
         client.run();
 
-
+*/
     }
 
+    /*
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -217,4 +334,5 @@ public class SubmitServlet extends HttpServlet {
         Gson gson = new Gson();
         response.getWriter().println(gson.toJson(responseMap));
     }
+    */
 }
