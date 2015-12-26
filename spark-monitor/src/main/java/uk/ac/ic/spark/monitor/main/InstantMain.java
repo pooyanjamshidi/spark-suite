@@ -5,10 +5,12 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import org.apache.commons.cli.*;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
+import uk.ac.ic.spark.monitor.util.ConstantConfig;
 import uk.ac.ic.spark.monitor.util.SparkRequester;
 
 import java.io.IOException;
@@ -19,19 +21,34 @@ public class InstantMain {
     private static final Logger log = LogManager.getLogger(InstantMain.class);
     private static final Options options = new Options();
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws ConfigurationException {
 
         initOptions();
 
         CommandLineParser parser = new DefaultParser();
 
         try {
-            // parse the command line arguments
-            log.info("Get args: " + Arrays.toString(args));
 
             CommandLine line = parser.parse( options, args);
 
+            // parse the command line arguments
+            log.info("Get all args: " + Arrays.toString(args));
+
             log.info("params: " + line.getOptionValue("P"));
+
+            log.info("polling time: " + line.getOptionValue("PT"));
+
+            log.info("monitor time: " + line.getOptionValue("MT"));
+
+            log.info("jar file path: " + line.getOptionValue("J"));
+
+            log.info("main class name: " + line.getOptionValue("C"));
+
+            log.info("args for spark application: " + line.getOptionValue("A"));
+
+            log.info("the index of args which ends with timestamp: " + line.getOptionValue("TE"));
+
+            ConstantConfig.init();
 
             String paramsAndValues = line.getOptionValue("P");
 
@@ -41,8 +58,8 @@ public class InstantMain {
 
             Multimap<String, String> paramsMultiMap = parseParams(Splitter.on(";")
                     .trimResults()
-                    .trimResults(CharMatcher.is('['))
-                    .trimResults(CharMatcher.is(']'))
+//                    .trimResults(CharMatcher.is('['))
+//                    .trimResults(CharMatcher.is(']'))
                     .split(paramsAndValues)
                     .iterator());
 
@@ -51,7 +68,7 @@ public class InstantMain {
 
             log.info("combined params List: " + combinedParams);
 
-            log.info("jar file Path: " + line.getOptionValue("J"));
+
 
             for(Map<String, String> paramsMap : combinedParams){
                 //TODO:: change configfile and submit job.
@@ -94,21 +111,67 @@ public class InstantMain {
         Option paramsOpt = Option.builder("P").hasArgs()
                 .longOpt("params")
                 .required()
-                .argName("p1=v11,v12;p2=v21,v22")
+                .argName("p1=v11,v12;p2=v21,v22...")
                 .hasArg()
-                .desc("params list")
+                .desc("params list for spark config")
                 .build();
 
 
         Option jarOpt = Option.builder("J").hasArgs()
                 .longOpt("jar")
+                .argName("jar path")
                 .required()
                 .hasArg()
-                .desc("path of jar file")
+                .desc("path of jar file for spark application")
+                .build();
+
+        Option classOpt = Option.builder("C").hasArgs()
+                .longOpt("class")
+                .argName("main class name")
+                .required()
+                .hasArg()
+                .desc("main class for spark application")
+                .build();
+
+
+        Option pollingTimeOpt = Option.builder("PT").hasArgs()
+                .longOpt("pollingTime")
+                .argName("polling time")
+                .required()
+                .hasArg()
+                .desc("polling time for check application")
+                .build();
+
+
+        Option monitorTimeOpt = Option.builder("MT").hasArgs()
+                .longOpt("monitorTime")
+                .argName("monitor time")
+                .required()
+                .hasArg()
+                .desc("total monitor time")
+                .build();
+
+        Option argsOpt = Option.builder("A").hasArgs()
+                .longOpt("args")
+                .argName("arg1,arg2,arg3...")
+                .hasArg()
+                .desc("args for spark application")
+                .build();
+
+        Option timeEndsIndexOpt = Option.builder("TE").hasArgs()
+                .longOpt("timeEndsArgsIndex")
+                .argName("index1,index2,index3...")
+                .hasArg()
+                .desc("the index of args which ends with timestamp")
                 .build();
 
         options.addOption(paramsOpt);
         options.addOption(jarOpt);
+        options.addOption(classOpt);
+        options.addOption(pollingTimeOpt);
+        options.addOption(monitorTimeOpt);
+        options.addOption(argsOpt);
+        options.addOption(timeEndsIndexOpt);
 
     }
 
