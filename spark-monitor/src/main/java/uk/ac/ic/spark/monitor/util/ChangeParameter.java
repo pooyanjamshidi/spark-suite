@@ -7,10 +7,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
 import uk.ac.ic.spark.monitor.exceptions.*;
+import uk.ac.ic.spark.monitor.main.InstantMain;
 
-
-public class ChangeParameter  {
+public class
+ChangeParameter{
 
 	private boolean propExisted = false;
 	BufferedReader br = null;
@@ -22,7 +25,7 @@ public class ChangeParameter  {
 		//Traverse config file
 		Iterator<Entry<String, String>> mapIterator = config.entrySet().iterator();
 		while(mapIterator.hasNext()){
-			Entry<String, String> property = (Entry<String, String>)mapIterator.next();
+			Map.Entry<String, String> property = (Map.Entry<String, String>)mapIterator.next();
 			String key = property.getKey();
 			String value = property.getValue();
 			try {
@@ -53,7 +56,7 @@ public class ChangeParameter  {
 	 */
 	private void isProperty(String property) throws FileNotFoundException, PropertyNotDefinedExceptions{
 		boolean isProp = false;
-		File file = new File("/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/ConfigurationParameter.txt");
+		File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 
@@ -65,7 +68,7 @@ public class ChangeParameter  {
 		}
 
 		if(!isProp){
-			throw new PropertyNotDefinedExceptions(property);
+			//throw new PropertyNotDefinedExceptions();
 		}
 
 	}
@@ -78,15 +81,21 @@ public class ChangeParameter  {
 	private String getFileName(String property){
 		String fileName = null;
 		if(property.contains("_")){
-			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/spark-env.sh.template";
+			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template";
 		}
 
 		if(property.contains(".")){
-			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/spark-defaults.conf.template";
+			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template";
 		}
 
 		if(property.contains("log")){
-			fileName = "/Users/hubert/Dropbox/Homework/spark-suite/spark-monitor/src/main/resources/configurationFile/log4j.properties.template";
+			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template";
+		}
+
+		Pattern pattern = Pattern.compile( "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$" );
+
+		if(pattern.matcher(property).matches()){
+			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template";
 		}
 		return fileName;
 
@@ -126,7 +135,7 @@ public class ChangeParameter  {
 		String tmpFileName = "";
 		for(int i = 0; i < tempPath.length; i++){
 			if(i > 0)
-			 tmpFileName += "/" + tempPath[i];
+				tmpFileName += "/" + tempPath[i];
 		}
 
 		//String tmpFileName = tempPath.toString();
@@ -142,34 +151,42 @@ public class ChangeParameter  {
 		String line;
 		while((line = br.readLine()) != null){
 			if(line.contains("#")) {
-				bw.write(line);
+				bw.write(line + '\n');
 				continue;
 			}
 			else{
+				
 				// Property already existed, modify its value
 				if(line.contains(property)){
 					propExisted = true;
 					String next = fileScanner.next();
 					//debug
 					System.out.println("next: " + next);
-					int propertyLength = fileScanner.next().length();
-					String value = line.substring(propertyLength + 1);
+					int propertyLength = next.length();
+					//String value = line.substring(propertyLength + 1);
+					String value = fileScanner.next();
 					//debug
 					System.out.println("value: " + value);
 					// Replace old value
-					line = line.replace(value, " " + newValue );
-					bw.write(line + '\n');
+					String tempLine = null;
+					tempLine = line.replace(value, " " + newValue );
+					bw.write(tempLine + '\n');
 
 				}
-				else{
+				else if(!line.contains(property)){
+					System.out.println("original line: " + line.toString());
+					//if(fileScanner.next() != "#"){
 					String next = fileScanner.next();
 					//debug
-					System.out.println("next: " + next);
-					int propertyLength = fileScanner.next().length();
-					String value = line.substring(propertyLength + 1);
+					//original next should be a property
+					System.out.println("original next: " + next);
+					int propertyLength = next.length();
+					//String value = line.substring(propertyLength + 1);
+					String value = fileScanner.next();
 					//debug
-					System.out.println("value: " + value);
+					System.out.println("original value: " + value);
 					bw.write(line + '\n');
+					//}
 
 				}
 			}
@@ -178,9 +195,9 @@ public class ChangeParameter  {
 		//Property not yet existed, add it to file
 		if(!propExisted){
 
-				System.out.println("new property: " + property);
-				System.out.println("new value: " + newValue);
-			    bw.write(property + " " + newValue + '\n');
+			System.out.println("new property: " + property);
+			System.out.println("new value: " + newValue);
+			bw.write(property + " " + newValue + '\n');
 		}
 
 		//reset
@@ -190,7 +207,7 @@ public class ChangeParameter  {
 			br.close();
 		if(bw != null)
 			bw.flush();
-			bw.close();
+		bw.close();
 
 
 		// Delete old file.
@@ -204,12 +221,14 @@ public class ChangeParameter  {
 
 
 	//test
-    public static void main(String[] args){
+	public static void main(String[] args){
 		Map<String, String> propertyList = new HashMap<String, String>();
-//		propertyList.put("spark.shuffle.io.maxRetries", "1");
-//		propertyList.put("SPARK_LOG_DIR", "test5");
-//		propertyList.put("SPARK_IDENT_STRING", "test3");
-//		propertyList.put("SPARK_NICENESS", "test1rt");
+		propertyList.put("SPARK_CONF_DIR", "test1");
+		propertyList.put("SPARK_LOG_DIR", "test66665");
+		propertyList.put("SPARK_IDENT_STRING", "testerere");
+		propertyList.put("SPARK_NICENESS", "test1rt");
+		propertyList.put("spark.master", "spark://master:7077");
+		propertyList.put("spark.eventLog.compress", "qjx19930605");
 		ChangeParameter changeParameter = new ChangeParameter();
 		changeParameter.modifyConfig(propertyList);
 	}

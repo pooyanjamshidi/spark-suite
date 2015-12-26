@@ -3,6 +3,7 @@ package uk.ac.ic.spark.monitor.servlet;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 //import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -35,6 +37,62 @@ public class SubmitServlet extends HttpServlet {
     private static final Logger log = LogManager.getLogger(HttpServlet.class);
     private final static org.apache.logging.log4j.Logger LOGGER =
             LogManager.getLogger(SubmitServlet.class.getCanonicalName());
+
+    /**
+     *
+     * @param source file
+     * @param target file
+     */
+    public void fileChannelCopy(File s, File t) {
+
+        FileInputStream fi = null;
+
+        FileOutputStream fo = null;
+
+        FileChannel in = null;
+
+        FileChannel out = null;
+
+        try {
+
+            fi = new FileInputStream(s);
+
+            fo = new FileOutputStream(t);
+
+            //get input channel
+            in = fi.getChannel();
+
+            //get output channel
+            out = fo.getChannel();
+
+            //connect two channels
+            in.transferTo(0, in.size(), out);
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+
+                fi.close();
+
+                in.close();
+
+                fo.close();
+
+                out.close();
+
+            } catch (IOException e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+    }
 
 
     private String getFileName(Part part) {
@@ -51,9 +109,10 @@ public class SubmitServlet extends HttpServlet {
 
 
     private static final String UPLOAD_DIR = "uploads";
+
     @Override
     protected void doPost(HttpServletRequest request,
-                         HttpServletResponse response) throws ServletException,
+                          HttpServletResponse response) throws ServletException,
             IOException {
 
         log.info("receive!");
@@ -63,42 +122,66 @@ public class SubmitServlet extends HttpServlet {
         request.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 
 
-        /*
-
-        Multimap<String, String> test = HashMultimap.create();
-        test.put("k1", "v11");
-        test.put("k1", "v12");
-        test.put("k2", "v21");
-        test.put("k2", "v22");
-
-        List testmap = InstantMain.combineAllParams(test);
-
-        log.info("combine!");
-        for(int i = 0; i < testmap.size(); i++){
-            log.info(testmap.get(i));
-        }
-        //log.info("combineMap:" + testmap.toString());
-        */
-
-
-
-        //TODO: for change configuration parameter
         Multimap<String, String> keyVlues = HashMultimap.create();
+
+        //TODO: back up original configuration file
+        File fairscheduler = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/fairscheduler.xml.template");
+        File fairschedulerCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/fairscheduler.xml.template_copy");
+        if(!fairschedulerCopy.exists()){
+            fairscheduler.createNewFile();
+        }
+        fileChannelCopy(fairscheduler,fairschedulerCopy);
+
+
+        File log4j = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template");
+        File log4jCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template_copy");
+        if(!log4jCopy.exists()){
+            log4jCopy.createNewFile();
+        }
+        fileChannelCopy(log4j,log4jCopy);
+
+        File metrics = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/metrics.properties.template");
+        File metricsCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/metrics.properties.template_copy");
+        if(!metricsCopy.exists()){
+            metricsCopy.createNewFile();
+        }
+        fileChannelCopy(metrics,metricsCopy);
+
+        File slaves = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template");
+        File slavesCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template_copy");
+        if(!slavesCopy.exists()){
+            slavesCopy.createNewFile();
+        }
+        fileChannelCopy(slaves,slavesCopy);
+
+        File spark_defaults = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template");
+        File spark_defaultsCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template_copy");
+        if(!spark_defaultsCopy.exists()){
+            spark_defaultsCopy.createNewFile();
+        }
+        fileChannelCopy(spark_defaults,spark_defaultsCopy);
+
+        File spark_env = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template");
+        File spark_envCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template_copy");
+        if(!spark_envCopy.exists()){
+            spark_envCopy.createNewFile();
+        }
+        fileChannelCopy(spark_env,spark_envCopy);
+
         //traverse ConfigurationParameter.txt, get which parameter had been change
         File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
         @SuppressWarnings("resource")
         Scanner scanner = new Scanner(file);
 
-        while(scanner.hasNextLine()){
+        while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             //log.info(line);
             String configParameter = request.getParameter(line);
             log.info(configParameter);
 
-            if(configParameter == null){
+            if (configParameter == null) {
                 continue;
-            }
-            else{
+            } else {
                 //add it into the propertyList
                 //key = line, configParameter = v1,v2,v3
                 //split on ","
@@ -107,9 +190,9 @@ public class SubmitServlet extends HttpServlet {
                         .omitEmptyStrings()
                         .split(configParameter);
                 //create key value pairs
-                for(String s:values){
+                for (String s : values) {
 
-                    keyVlues.put(line,s);
+                    keyVlues.put(line, s);
                     log.info("key before combine: " + line + " value before combine: " + s);
 
                 }
@@ -120,18 +203,25 @@ public class SubmitServlet extends HttpServlet {
         Map<String, String> propertyList = new HashMap<String, String>();
         log.info("Combine: " + combinekeyValues.toString());
 
-        for(int i = 0; i < combinekeyValues.size(); i++){
+        for (int i = 0; i < combinekeyValues.size(); i++) {
             // Each combine run once
-            String keyValues = (String)combinekeyValues.get(i);
+            Object keyValues = combinekeyValues.get(i);
+            String keyValuesStr = keyValues.toString();
+            log.info("keyValuesStr: " + keyValuesStr);
+            //get sub-string
+            keyValuesStr = keyValuesStr.substring(1,keyValuesStr.length()-1);
             //split on "," "{", "}"
             //get k1 = v1, k2 = v2, k3 = v3
             Iterable<String> keysValues = Splitter.on(",")
                     .trimResults()
+                    .omitEmptyStrings()
                     .trimResults(CharMatcher.is('{'))
                     .trimResults(CharMatcher.is('}'))
-                    .split(keyValues);
+                    .trimResults(CharMatcher.is('['))
+                    .trimResults(CharMatcher.is(']'))
+                    .split(keyValuesStr);
 
-            for(String s : keysValues){
+            for (String s : keysValues) {
                 //split on "="
                 //add into property list
                 String[] keyValue = s.split("=");
@@ -139,20 +229,27 @@ public class SubmitServlet extends HttpServlet {
                 log.info("key: " + keyValue[0] + " value: " + keyValue[1]);
             }
 
+            //change parameter
             ChangeParameter changeParameter = new ChangeParameter();
             changeParameter.modifyConfig(propertyList);
-        }
 
+
+            //TODO: submit job
+
+
+            //recover from the original configuration file
+            fileChannelCopy(fairschedulerCopy,fairscheduler);
+            fileChannelCopy(log4jCopy,log4j);
+            fileChannelCopy(metricsCopy,metrics);
+            fileChannelCopy(slavesCopy,slaves);
+            fileChannelCopy(spark_defaultsCopy,spark_defaults);
+            fileChannelCopy(spark_envCopy,spark_env);
+
+        }
 
 
         ////////////////////////////////////////////////////////////////////////
 
-        //add the multipart config
-        //MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
-        //request.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
-
-        // get the args pass to main class
-        //String args[] = request.getParameterValues("argsList");
 
         String arg = request.getParameter("PARAMETERS");
 
@@ -183,16 +280,16 @@ public class SubmitServlet extends HttpServlet {
                 out.write(bytes, 0, read);
             }
             writer.println("New file " + fileName + " created at " + path);
-           // LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
-           //         new Object[]{fileName, path});
+            // LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
+            //         new Object[]{fileName, path});
         } catch (FileNotFoundException fne) {
             writer.println("You either did not specify a file to upload or are "
                     + "trying to upload a file to a protected or nonexistent "
                     + "location.");
             writer.println("<br/> ERROR: " + fne.getMessage());
 
-           // LOGGER. log(Level.SEVERE, "Problems during file upload. Error: {0}",
-           //         new Object[]{fne.getMessage()});
+            // LOGGER. log(Level.SEVERE, "Problems during file upload. Error: {0}",
+            //         new Object[]{fne.getMessage()});
         } finally {
             if (out != null) {
                 out.close();
@@ -211,70 +308,7 @@ public class SubmitServlet extends HttpServlet {
 
 
 
-        /*
-        String[] args = new String[]{
-                //the name of the application
-                "--name",
-                "submitJob",
 
-                //memory for driver
-                "--driver-memory",
-                "1000M",
-
-                //path to the application's JAR file
-                //Get the JAR from the front-end
-                "--jar",
-                //TODO: wordCount JAR as a test
-                //"/Users/Qiu/Documents/workspace/sparkSubmitJob/out/artifacts/sparkSubmitJob_jar/sparkSubmitJob_jar.jar",
-                path,
-
-                // name of your application's main class
-                // TODO: according to the front-end
-                // hard code here
-                "--class",
-                //"wordcount.JavaWordCount",
-                mainClass,
-
-                //"user already add the dependency into JAR"
-                //"--addJAR"
-
-                //argument of the program
-                //TODO: get arg from front-end, hard code here
-                "--arg",
-                //path of the file here
-                //"/Users/Qiu/Documents/workspace/sparkSubmitJob/src/input.txt",
-                arg,
-
-
-        };
-
-        // create a Hadoop Configuration object
-        Configuration config = new Configuration();
-        config.set("fs.defaultFS", "hdfs://146.169.46.48:9000");// namenode
-        config.set("mapreduce.framework.name","yarn"); // yarn
-        config.set("yarn.resourcemanager.address","146.169.46.48:8032"); // resourcemanager
-        config.set("yarn.resourcemanager.scheduler.address", "146.169.46.48:8030");
-        config.set("mapreduce.jobhistory.address","node101:10020");
-
-        // identify that you will be using Spark as YARN mode
-        System.setProperty("SPARK_YARN_MODE", "true");
-
-        // create an instance of SparkConf object
-        // spark configuration
-        SparkConf sparkConf = new SparkConf();
-
-        // create ClientArguments, which will be passed to Client
-        ClientArguments cArgs = new ClientArguments(args, sparkConf);
-
-
-        // create an instance of yarn Client client
-        Client client = new Client(cArgs, config, sparkConf);
-
-        // submit Spark job to YARN
-        client.run();
-
-*/
-    }
 
     /*
 
@@ -332,4 +366,5 @@ public class SubmitServlet extends HttpServlet {
         response.getWriter().println(gson.toJson(responseMap));
     }
     */
+    }
 }
