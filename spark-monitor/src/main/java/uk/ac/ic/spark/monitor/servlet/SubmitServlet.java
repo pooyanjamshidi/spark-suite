@@ -5,14 +5,11 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-import org.apache.hadoop.conf.Configuration;
 //import org.apache.logging.log4j.LogManager;
 //import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.spark.SparkConf;
-import org.apache.spark.deploy.yarn.Client;
-import org.apache.spark.deploy.yarn.ClientArguments;
+
 import uk.ac.ic.spark.monitor.main.InstantMain;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;

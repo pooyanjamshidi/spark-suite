@@ -1,6 +1,5 @@
 package uk.ac.ic.spark.monitor.main;
 
-import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
@@ -9,11 +8,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.ic.spark.monitor.util.ChangeParameter;
-import uk.ac.ic.spark.monitor.util.ConstantConfig;
-import uk.ac.ic.spark.monitor.util.SparkRequester;
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
+import uk.ac.ic.spark.monitor.util.SparkExec;
 
-import java.io.IOException;
 import java.util.*;
 
 public class InstantMain {
@@ -38,7 +35,7 @@ public class InstantMain {
 
             log.info("polling time: " + line.getOptionValue("PT"));
 
-            log.info("monitor time: " + line.getOptionValue("MT"));
+            log.info("check times: " + line.getOptionValue("CT"));
 
             log.info("jar file path: " + line.getOptionValue("J"));
 
@@ -68,6 +65,29 @@ public class InstantMain {
 
             log.info("combined params List: " + combinedParams);
 
+            String jarPath = line.getOptionValue("J");
+            String className = line.getOptionValue("C");
+
+            List<String> argsList;
+
+            if(line.getOptionValue("A") == null){
+                argsList = new ArrayList<String>();
+            } else {
+                argsList = Splitter.on(",").trimResults().splitToList(line.getOptionValue("A"));
+            }
+
+            Set<String> timeEndsIndex;
+
+            if(line.getOptionValue("TE") == null){
+                timeEndsIndex = new HashSet<String>();
+            } else {
+                timeEndsIndex = new HashSet<String>(Splitter.on(",").trimResults().splitToList(line.getOptionValue("TE")));
+            }
+
+
+
+            int pollingTime = Integer.valueOf(line.getOptionValue("PT"));
+            int checkTimes = Integer.valueOf(line.getOptionValue("CT"));
 
 
             for(Map<String, String> paramsMap : combinedParams){
@@ -75,29 +95,31 @@ public class InstantMain {
                 log.info("Change config params map: " + paramsMap);
 //                ChangeParameter changeParameter = new ChangeParameter();
 //                changeParameter.modifyConfig(paramsMap);
-                log.info("Submit Spark Job: Fake Now");
-                log.info("Get application ID: application_1446044705002_0009");
-//                log.info("");
+//                log.info("Submit Spark Job: Fake Now");
+//                log.info("Get application ID: application_1446044705002_0009");
 
+                SparkExec sparkExec = new SparkExec();
+                sparkExec.submitSparkApp(jarPath, className,
+                        pollingTime, checkTimes,
+                        argsList, timeEndsIndex);
 
-                SparkRequester sparkRequester = new SparkRequester();
-
-                log.info("JobInfo: " + sparkRequester.getJobsList("application_1446044705002_0009"));
+//                SparkRequester sparkRequester = new SparkRequester();
+//
+//                log.info("JobInfo: " + sparkRequester.getJobsList("application_1446044705002_0009"));
             }
 
         } catch( ParseException exp ) {
             // oops, something went wrong
             String errorMessage = "Parsing failed. Reason: " + exp.getMessage();
-            System.err.println(errorMessage);
+
             log.error(errorMessage );
+            log.error(exp.getMessage(), exp);
             printHelp();
         } catch (IllegalArgumentException iae){
             String errorMessage =  "Illegal argument param: " + iae.getMessage();
-            System.err.println(errorMessage);
             log.error(errorMessage);
+            log.error(iae.getMessage(), iae);
             printHelp();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
@@ -143,12 +165,12 @@ public class InstantMain {
                 .build();
 
 
-        Option monitorTimeOpt = Option.builder("MT").hasArgs()
-                .longOpt("monitorTime")
-                .argName("monitor time")
+        Option monitorTimeOpt = Option.builder("CT").hasArgs()
+                .longOpt("checkTimes")
+                .argName("check times")
                 .required()
                 .hasArg()
-                .desc("total monitor time")
+                .desc("total check times")
                 .build();
 
         Option argsOpt = Option.builder("A").hasArgs()

@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
 
 import java.lang.reflect.Type;
 
@@ -22,7 +23,7 @@ public class SparkRequester {
 
 //    private static final String url = "http://localhost:4040/api/v1/applications/";
 //    private static final String url = "http://spark3.haoran.io:4040/api/v1/applications/";
-    private static final String url = "http://spark3.haoran.io:18080//api/v1/applications/";
+    private String url = null;
     private static final GsonBuilder gsonBuilder = new GsonBuilder()
             .registerTypeAdapter(Double.class,  new JsonSerializer<Double>() {
 
@@ -33,6 +34,10 @@ public class SparkRequester {
                 }
             });
 
+
+    public SparkRequester(){
+        url = ConstantConfig.SPARK_CHEKC_URL;
+    }
 
     public final static void main(String[] args) throws IOException {
         try{
