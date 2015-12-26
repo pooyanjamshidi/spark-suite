@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import uk.ac.ic.spark.monitor.exceptions.*;
-import uk.ac.ic.spark.monitor.main.InstantMain;
+import uk.ac.ic.spark.monitor.Config.*;
 
 public class
 ChangeParameter{
@@ -56,7 +56,7 @@ ChangeParameter{
 	 */
 	private void isProperty(String property) throws FileNotFoundException, PropertyNotDefinedExceptions{
 		boolean isProp = false;
-		File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
+		File file = new File(ConstantConfig.SPARK_CONFIG);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 
@@ -81,21 +81,21 @@ ChangeParameter{
 	private String getFileName(String property){
 		String fileName = null;
 		if(property.contains("_")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template";
+			fileName = ConstantConfig.SPARK_ENV_SH_TEMPLATE;
 		}
 
 		if(property.contains(".")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template";
+			fileName = ConstantConfig.SPARK_DEFAULTS_CONF;
 		}
 
 		if(property.contains("log")){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template";
+			fileName = ConstantConfig.SPARK_LOG4J;
 		}
 
 		Pattern pattern = Pattern.compile( "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$" );
 
 		if(pattern.matcher(property).matches()){
-			fileName = "/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template";
+			fileName = ConstantConfig.SPARK_SLAVES;
 		}
 		return fileName;
 

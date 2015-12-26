@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import uk.ac.ic.spark.monitor.Config.ConstantConfig;
 import uk.ac.ic.spark.monitor.main.InstantMain;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;
@@ -125,51 +126,51 @@ public class SubmitServlet extends HttpServlet {
         Multimap<String, String> keyVlues = HashMultimap.create();
 
         //TODO: back up original configuration file
-        File fairscheduler = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/fairscheduler.xml.template");
-        File fairschedulerCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/fairscheduler.xml.template_copy");
+        File fairscheduler = new File(ConstantConfig.SPARK_FAIR_SCHEDULER);
+        File fairschedulerCopy = new File(ConstantConfig.SPARK_FAIR_SCHEDULER_COPY);
         if(!fairschedulerCopy.exists()){
             fairscheduler.createNewFile();
         }
         fileChannelCopy(fairscheduler,fairschedulerCopy);
 
 
-        File log4j = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template");
-        File log4jCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/log4j.properties.template_copy");
+        File log4j = new File(ConstantConfig.SPARK_LOG4J);
+        File log4jCopy = new File(ConstantConfig.SPARK_LOG4J_COPY);
         if(!log4jCopy.exists()){
             log4jCopy.createNewFile();
         }
         fileChannelCopy(log4j,log4jCopy);
 
-        File metrics = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/metrics.properties.template");
-        File metricsCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/metrics.properties.template_copy");
+        File metrics = new File(ConstantConfig.SPARK_MATRICS);
+        File metricsCopy = new File(ConstantConfig.SPARK_MATRICS_COPY);
         if(!metricsCopy.exists()){
             metricsCopy.createNewFile();
         }
         fileChannelCopy(metrics,metricsCopy);
 
-        File slaves = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template");
-        File slavesCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/slaves.template_copy");
+        File slaves = new File(ConstantConfig.SPARK_SLAVES);
+        File slavesCopy = new File(ConstantConfig.SPARK_SLAVES_COPY);
         if(!slavesCopy.exists()){
             slavesCopy.createNewFile();
         }
         fileChannelCopy(slaves,slavesCopy);
 
-        File spark_defaults = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template");
-        File spark_defaultsCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-defaults.conf.template_copy");
+        File spark_defaults = new File(ConstantConfig.SPARK_DEFAULTS_CONF);
+        File spark_defaultsCopy = new File(ConstantConfig.SPARK_DEFAULTS_CONF_COPY);
         if(!spark_defaultsCopy.exists()){
             spark_defaultsCopy.createNewFile();
         }
         fileChannelCopy(spark_defaults,spark_defaultsCopy);
 
-        File spark_env = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template");
-        File spark_envCopy = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/conf/spark-env.sh.template_copy");
+        File spark_env = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE);
+        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE_COPY);
         if(!spark_envCopy.exists()){
             spark_envCopy.createNewFile();
         }
         fileChannelCopy(spark_env,spark_envCopy);
 
         //traverse ConfigurationParameter.txt, get which parameter had been change
-        File file = new File("/Users/Qiu/Documents/workspace/ModifyParameter/src/ConfigurationParameter.txt");
+        File file = new File(ConstantConfig.SPARK_CONFIG);
         @SuppressWarnings("resource")
         Scanner scanner = new Scanner(file);
 
