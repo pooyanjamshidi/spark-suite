@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+
+        <meta charset="utf-8">
+        <title>Alissa - Responsive Coming Soon Template</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lobster">
+        <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Lato:400,700'>
+        <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/style.css">
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+            <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!-- Favicon and touch icons -->
+        <link rel="shortcut icon" href="assets/ico/favicon.ico">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+
+    
+		<script>
+		function myFunction(){
+		    var x = document.getElementById("myFile");
+		    var txt = "";
+		    if ('files' in x) {
+		        if (x.files.length == 0) {
+		            txt = "Select one or more files.";
+		        } else {
+		            for (var i = 0; i < x.files.length; i++) {
+		                txt += "<br><strong>" + (i+1) + ". file</strong><br>";
+		                var file = x.files[i];
+		                if ('name' in file) {
+		                    txt += "name: " + file.name + "<br>";
+		                }
+		                if ('size' in file) {
+		                    txt += "size: " + file.size + " bytes <br>";
+		                }
+		            }
+		        }
+		    } 
+		    else {
+		        if (x.value == "") {
+		            txt += "Select one or more files.";
+		        } else {
+		            txt += "The files property is not supported by your browser!";
+		            txt  += "<br>The path of the selected file: " + x.value; // If the browser does not support the files property, it will return the path of the selected file instead. 
+		        }
+		    }
+		    document.getElementById("demo").innerHTML = txt;
+		}
+		</script>
+
+    </head>
+
+    <body>
+
+        <!-- Header -->
+        <div class="container">
+            <div class="header row">
+                <div class="logo span4">
+                    <h1><a href="">Spark Group</a> <span>.</span></h1>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coming Soon -->
+        <div class="coming-soon">
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="span12">
+                            <h2>Performance Testing</h2>
+                            <p>Time Count down!</p>
+                            <div class="timer">
+                                <div class="days-wrapper">
+                                    <span class="days"></span> <br>days
+                                </div>
+                                <div class="hours-wrapper">
+                                    <span class="hours"></span> <br>hours
+                                </div>
+                                <div class="minutes-wrapper">
+                                    <span class="minutes"></span> <br>minutes
+                                </div>
+                                <div class="seconds-wrapper">
+                                    <span class="seconds"></span> <br>seconds
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="container">
+           <div class="row">
+                <div class="span12 subscribe">
+                    <h3>Upload Jar files</h3>
+					<p><strong>Tip:</strong> Use the Control or the Shift key to select multiple files.</p>
+					<input type="file" id="myFile" multiple size="5000" onchange="myFunction()">
+					<p id="demo"></p>
+                    <div class="success-message"></div>
+                    <div class="error-message"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Javascript -->
+        <script src="assets/js/jquery-1.8.2.min.js"></script>
+        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/js/jquery.backstretch.min.js"></script>
+        <script src="assets/js/jquery.countdown.js"></script>
+        <script src="assets/js/scripts.js"></script>
+
+    </body>
+
+</html>
+
