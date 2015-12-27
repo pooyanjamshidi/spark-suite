@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor.Config;
+package uk.ac.ic.spark.monitor.config;
 
 
 import org.apache.commons.configuration.Configuration;
