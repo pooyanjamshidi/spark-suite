@@ -6,14 +6,14 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
-//import org.apache.logging.log4j.LogManager;
-//import org.apache.logging.log4j.Logger;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import uk.ac.ic.spark.monitor.Config.ConstantConfig;
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.main.InstantMain;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
+import uk.ac.ic.spark.monitor.util.FileUtil;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;
 
 import javax.servlet.MultipartConfigElement;
@@ -36,85 +36,21 @@ import java.util.logging.Level;
         maxRequestSize=1024*1024*100)      // 100 MB
 public class SubmitServlet extends HttpServlet {
     private static final Logger log = LogManager.getLogger(HttpServlet.class);
-    private final static org.apache.logging.log4j.Logger LOGGER =
-            LogManager.getLogger(SubmitServlet.class.getCanonicalName());
-
-    /**
-     *
-     * @param source file
-     * @param target file
-     */
-    public void fileChannelCopy(File s, File t) {
-
-        FileInputStream fi = null;
-
-        FileOutputStream fo = null;
-
-        FileChannel in = null;
-
-        FileChannel out = null;
-
-        try {
-
-            fi = new FileInputStream(s);
-
-            fo = new FileOutputStream(t);
-
-            //get input channel
-            in = fi.getChannel();
-
-            //get output channel
-            out = fo.getChannel();
-
-            //connect two channels
-            in.transferTo(0, in.size(), out);
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        } finally {
-
-            try {
-
-                fi.close();
-
-                in.close();
-
-                fo.close();
-
-                out.close();
-
-            } catch (IOException e) {
-
-                e.printStackTrace();
-
-            }
-
-        }
-
-    }
-
-
-    private String getFileName(Part part) {
-        final String partHeader = part.getHeader("content-disposition");
-        //LOGGER.log(Level.INFO, "Part Header = {0}", partHeader);
-        for (String content : part.getHeader("content-disposition").split(";")) {
-            if (content.trim().startsWith("filename")) {
-                return content.substring(
-                        content.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return null;
-    }
+//    private final static org.apache.logging.log4j.Logger LOGGER =
+//            LogManager.getLogger(SubmitServlet.class.getCanonicalName());
 
 
     private static final String UPLOAD_DIR = "uploads";
 
+    private static final Set<String> NOT_PARAMS_SET = new HashSet<String>(){{
+       add("");
+    }};
+
+
     @Override
     protected void doPost(HttpServletRequest request,
-                          HttpServletResponse response) throws ServletException,
-            IOException {
+                          HttpServletResponse response)
+            throws ServletException, IOException {
 
         log.info("receive!");
 
@@ -122,52 +58,67 @@ public class SubmitServlet extends HttpServlet {
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
         request.setAttribute("org.eclipse.jetty.multipartConfig", multipartConfigElement);
 
+        ////////////////////////////////////////////////////////////////////////
+
+
+        String arg = request.getParameter("PARAMETERS");
+
+
+        log.info("arg: " + arg);
+        // get main class
+        String mainClass = request.getParameter("mainClass");
+        log.info("mainClass: " + mainClass);
+        // get the JAR file
+        Part jarPart = request.getPart("file");
+        String fileName = FileUtil.getFileName(jarPart);
+        log.info("fileName: " + fileName);
+        OutputStream out = null;
+        InputStream jarContent = null;
+        final PrintWriter writer = response.getWriter();
+        //create path to save the file
+        String path = "/Users/Qiu/spark-suite";
+
+        try {
+            out = new FileOutputStream(new File(path + File.separator
+                    + fileName));
+            jarContent = jarPart.getInputStream();
+
+            int read = 0;
+            final byte[] bytes = new byte[1024];
+
+            while ((read = jarContent.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            writer.println("New file " + fileName + " created at " + path);
+            // LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
+            //         new Object[]{fileName, path});
+        } catch (FileNotFoundException fne) {
+            writer.println("You either did not specify a file to upload or are "
+                    + "trying to upload a file to a protected or nonexistent "
+                    + "location.");
+            writer.println("<br/> ERROR: " + fne.getMessage());
+
+            // LOGGER. log(Level.SEVERE, "Problems during file upload. Error: {0}",
+            //         new Object[]{fne.getMessage()});
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+            if (jarContent != null) {
+                jarContent.close();
+            }
+            if (writer != null) {
+                writer.close();
+            }
+
+            response.getWriter().write("Upload Successfully!!");
+        }
+        //get content of JAR file
+        //give the local jar path to the JOB
+
+
 
         Multimap<String, String> keyVlues = HashMultimap.create();
-
-        //TODO: back up original configuration file
-        File fairscheduler = new File(ConstantConfig.SPARK_FAIR_SCHEDULER);
-        File fairschedulerCopy = new File(ConstantConfig.SPARK_FAIR_SCHEDULER_COPY);
-        if(!fairschedulerCopy.exists()){
-            fairscheduler.createNewFile();
-        }
-        fileChannelCopy(fairscheduler,fairschedulerCopy);
-
-
-        File log4j = new File(ConstantConfig.SPARK_LOG4J);
-        File log4jCopy = new File(ConstantConfig.SPARK_LOG4J_COPY);
-        if(!log4jCopy.exists()){
-            log4jCopy.createNewFile();
-        }
-        fileChannelCopy(log4j,log4jCopy);
-
-        File metrics = new File(ConstantConfig.SPARK_MATRICS);
-        File metricsCopy = new File(ConstantConfig.SPARK_MATRICS_COPY);
-        if(!metricsCopy.exists()){
-            metricsCopy.createNewFile();
-        }
-        fileChannelCopy(metrics,metricsCopy);
-
-        File slaves = new File(ConstantConfig.SPARK_SLAVES);
-        File slavesCopy = new File(ConstantConfig.SPARK_SLAVES_COPY);
-        if(!slavesCopy.exists()){
-            slavesCopy.createNewFile();
-        }
-        fileChannelCopy(slaves,slavesCopy);
-
-        File spark_defaults = new File(ConstantConfig.SPARK_DEFAULTS_CONF);
-        File spark_defaultsCopy = new File(ConstantConfig.SPARK_DEFAULTS_CONF_COPY);
-        if(!spark_defaultsCopy.exists()){
-            spark_defaultsCopy.createNewFile();
-        }
-        fileChannelCopy(spark_defaults,spark_defaultsCopy);
-
-        File spark_env = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE);
-        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE_COPY);
-        if(!spark_envCopy.exists()){
-            spark_envCopy.createNewFile();
-        }
-        fileChannelCopy(spark_env,spark_envCopy);
 
         //traverse ConfigurationParameter.txt, get which parameter had been change
         File file = new File(ConstantConfig.SPARK_CONFIG);
@@ -239,79 +190,13 @@ public class SubmitServlet extends HttpServlet {
 
 
             //recover from the original configuration file
-            fileChannelCopy(fairschedulerCopy,fairscheduler);
-            fileChannelCopy(log4jCopy,log4j);
-            fileChannelCopy(metricsCopy,metrics);
-            fileChannelCopy(slavesCopy,slaves);
-            fileChannelCopy(spark_defaultsCopy,spark_defaults);
-            fileChannelCopy(spark_envCopy,spark_env);
+
 
         }
+    }
 
 
-        ////////////////////////////////////////////////////////////////////////
-
-
-        String arg = request.getParameter("PARAMETERS");
-
-
-        log.info("arg: " + arg);
-        // get main class
-        String mainClass = request.getParameter("mainClass");
-        log.info("mainClass: " + mainClass);
-        // get the JAR file
-        Part jarPart = request.getPart("file");
-        String fileName = getFileName(jarPart);
-        log.info("fileName: " + fileName);
-        OutputStream out = null;
-        InputStream jarContent = null;
-        final PrintWriter writer = response.getWriter();
-        //create path to save the file
-        String path = "/Users/Qiu/spark-suite";
-
-        try {
-            out = new FileOutputStream(new File(path + File.separator
-                    + fileName));
-            jarContent = jarPart.getInputStream();
-
-            int read = 0;
-            final byte[] bytes = new byte[1024];
-
-            while ((read = jarContent.read(bytes)) != -1) {
-                out.write(bytes, 0, read);
-            }
-            writer.println("New file " + fileName + " created at " + path);
-            // LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
-            //         new Object[]{fileName, path});
-        } catch (FileNotFoundException fne) {
-            writer.println("You either did not specify a file to upload or are "
-                    + "trying to upload a file to a protected or nonexistent "
-                    + "location.");
-            writer.println("<br/> ERROR: " + fne.getMessage());
-
-            // LOGGER. log(Level.SEVERE, "Problems during file upload. Error: {0}",
-            //         new Object[]{fne.getMessage()});
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-            if (jarContent != null) {
-                jarContent.close();
-            }
-            if (writer != null) {
-                writer.close();
-            }
-
-            response.getWriter().write("Upload Successfully!!");
-        }
-        //get content of JAR file
-        //give the local jar path to the JOB
-
-
-
-
-
-    /*
+        /*
 
     @Override
     protected void doGet(HttpServletRequest request,
@@ -367,5 +252,5 @@ public class SubmitServlet extends HttpServlet {
         response.getWriter().println(gson.toJson(responseMap));
     }
     */
-    }
+
 }
