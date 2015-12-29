@@ -11,7 +11,7 @@ import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import uk.ac.ic.spark.monitor.Config.ConstantConfig;
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.main.InstantMain;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;

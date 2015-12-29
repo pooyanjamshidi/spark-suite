@@ -10,7 +10,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import uk.ac.ic.spark.monitor.exceptions.*;
-import uk.ac.ic.spark.monitor.Config.*;
+import uk.ac.ic.spark.monitor.config.*;
 
 public class
 ChangeParameter{
