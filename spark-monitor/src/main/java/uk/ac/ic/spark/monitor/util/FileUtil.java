@@ -17,7 +17,7 @@ public class FileUtil {
      * @param source file
      * @param target file
      */
-    public void fileChannelCopy(File s, File t) {
+    public static void fileChannelCopy(File s, File t) {
 
         FileInputStream fi = null;
 
@@ -81,7 +81,7 @@ public class FileUtil {
     }
 
 
-    public void backUpAllConfigFiles() throws IOException {
+    public static void backUpAllConfigFiles() throws IOException {
         File fairscheduler = new File(ConstantConfig.SPARK_FAIR_SCHEDULER);
         File fairschedulerCopy = new File(ConstantConfig.SPARK_FAIR_SCHEDULER_COPY);
         if(!fairschedulerCopy.exists()){
@@ -111,15 +111,15 @@ public class FileUtil {
         }
         fileChannelCopy(slaves,slavesCopy);
 
-        File spark_defaults = new File(ConstantConfig.SPARK_DEFAULTS_CONF);
-        File spark_defaultsCopy = new File(ConstantConfig.SPARK_DEFAULTS_CONF_COPY);
+        File spark_defaults = new File(ConstantConfig.SPARK_CONF);
+        File spark_defaultsCopy = new File(ConstantConfig.SPARK_CONF_COPY);
         if(!spark_defaultsCopy.exists()){
             spark_defaultsCopy.createNewFile();
         }
         fileChannelCopy(spark_defaults,spark_defaultsCopy);
 
-        File spark_env = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE);
-        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE_COPY);
+        File spark_env = new File(ConstantConfig.SPARK_ENV_SH);
+        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_COPY);
         if(!spark_envCopy.exists()){
             spark_envCopy.createNewFile();
         }
@@ -127,7 +127,7 @@ public class FileUtil {
     }
 
 
-    public void restoreAllConfigFiles(){
+    public static void restoreAllConfigFiles(){
         File fairscheduler = new File(ConstantConfig.SPARK_FAIR_SCHEDULER);
         File fairschedulerCopy = new File(ConstantConfig.SPARK_FAIR_SCHEDULER_COPY);
         fileChannelCopy(fairschedulerCopy,fairscheduler);
@@ -145,12 +145,12 @@ public class FileUtil {
         File slavesCopy = new File(ConstantConfig.SPARK_SLAVES_COPY);
         fileChannelCopy(slavesCopy,slaves);
 
-        File spark_defaults = new File(ConstantConfig.SPARK_DEFAULTS_CONF);
-        File spark_defaultsCopy = new File(ConstantConfig.SPARK_DEFAULTS_CONF_COPY);
+        File spark_defaults = new File(ConstantConfig.SPARK_CONF);
+        File spark_defaultsCopy = new File(ConstantConfig.SPARK_CONF_COPY);
         fileChannelCopy(spark_defaultsCopy,spark_defaults);
 
-        File spark_env = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE);
-        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_TEMPLATE_COPY);
+        File spark_env = new File(ConstantConfig.SPARK_ENV_SH);
+        File spark_envCopy = new File(ConstantConfig.SPARK_ENV_SH_COPY);
         fileChannelCopy(spark_envCopy,spark_env);
     }
 

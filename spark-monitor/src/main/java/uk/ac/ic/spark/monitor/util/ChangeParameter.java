@@ -12,8 +12,7 @@ import java.util.regex.Pattern;
 import uk.ac.ic.spark.monitor.exceptions.*;
 import uk.ac.ic.spark.monitor.config.*;
 
-public class
-ChangeParameter{
+public class ChangeParameter{
 
 	private boolean propExisted = false;
 	BufferedReader br = null;
@@ -56,7 +55,7 @@ ChangeParameter{
 	 */
 	private void isProperty(String property) throws FileNotFoundException, PropertyNotDefinedExceptions{
 		boolean isProp = false;
-		File file = new File(ConstantConfig.SPARK_CONFIG);
+		File file = new File(ConstantConfig.SPARK_CONFIG_PARAMS);
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(file);
 
@@ -81,11 +80,11 @@ ChangeParameter{
 	private String getFileName(String property){
 		String fileName = null;
 		if(property.contains("_")){
-			fileName = ConstantConfig.SPARK_ENV_SH_TEMPLATE;
+			fileName = ConstantConfig.SPARK_ENV_SH;
 		}
 
 		if(property.contains(".")){
-			fileName = ConstantConfig.SPARK_DEFAULTS_CONF;
+			fileName = ConstantConfig.SPARK_CONF;
 		}
 
 		if(property.contains("log")){
@@ -130,7 +129,7 @@ ChangeParameter{
 		String tempPath[] = fileName.split("/");
 
 		int pathLength = tempPath.length;
-		System.out.println("fileName: " + tempPath[pathLength-1]);
+//		System.out.println("fileName: " + tempPath[pathLength-1]);
 		tempPath[pathLength-1] = "temp_" + tempPath[pathLength-1];
 		String tmpFileName = "";
 		for(int i = 0; i < tempPath.length; i++){
@@ -139,7 +138,7 @@ ChangeParameter{
 		}
 
 		//String tmpFileName = tempPath.toString();
-		System.out.println(tmpFileName);
+//		System.out.println(tmpFileName);
 		File file = new File(fileName);
 		Scanner fileScanner = new Scanner(file);
 
@@ -161,12 +160,12 @@ ChangeParameter{
 					propExisted = true;
 					String next = fileScanner.next();
 					//debug
-					System.out.println("next: " + next);
+//					System.out.println("next: " + next);
 					int propertyLength = next.length();
 					//String value = line.substring(propertyLength + 1);
 					String value = fileScanner.next();
 					//debug
-					System.out.println("value: " + value);
+//					System.out.println("value: " + value);
 					// Replace old value
 					String tempLine = null;
 					tempLine = line.replace(value, " " + newValue );

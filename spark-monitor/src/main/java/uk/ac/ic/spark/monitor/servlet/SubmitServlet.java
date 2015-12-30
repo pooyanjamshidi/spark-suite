@@ -3,9 +3,7 @@ package uk.ac.ic.spark.monitor.servlet;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-import com.google.gson.Gson;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +12,7 @@ import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.main.InstantMain;
 import uk.ac.ic.spark.monitor.util.ChangeParameter;
 import uk.ac.ic.spark.monitor.util.FileUtil;
+import uk.ac.ic.spark.monitor.util.SparkExec;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;
 
 import javax.servlet.MultipartConfigElement;
@@ -25,9 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.*;
-import java.nio.channels.FileChannel;
 import java.util.*;
-import java.util.logging.Level;
+
+import static uk.ac.ic.spark.monitor.config.ConstantConfig.*;
 
 @WebServlet(name = "SubmitServlet", urlPatterns = {"/upload"})
 
@@ -40,19 +39,18 @@ public class SubmitServlet extends HttpServlet {
 //            LogManager.getLogger(SubmitServlet.class.getCanonicalName());
 
 
-    private static final String UPLOAD_DIR = "uploads";
-
-    private static final Set<String> NOT_PARAMS_SET = new HashSet<String>(){{
-       add("");
+    private static final List<String> requiredParametersList = new ArrayList<String>(){{
+        add("pollingTime");
+        add("checkTimes");
+//        add("jarFile");
+        add("mainClass");
     }};
-
 
     @Override
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
 
-        log.info("receive!");
 
         //add the multipart config
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
@@ -60,11 +58,47 @@ public class SubmitServlet extends HttpServlet {
 
         ////////////////////////////////////////////////////////////////////////
 
+        log.info("Receive ParameterMap: " + request.getParameterMap());
 
-        String arg = request.getParameter("PARAMETERS");
+        for(String paramName : requiredParametersList){
+            if(!request.getParameterMap().keySet().contains(paramName)){
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                log.info("Set 400. Require: " + paramName);
+                response.getWriter().println("Require: " + paramName);
+                return;
+            }
+
+        }
+
+        String strPollingTime = request.getParameter("pollingTime");
+
+        int pollingTime = Integer.parseInt(strPollingTime);
+
+        String strCheckTimes = request.getParameter("checkTimes");
+
+        int checkTimes = Integer.parseInt(strCheckTimes);
 
 
-        log.info("arg: " + arg);
+        List<String> argsList;
+
+        if(request.getParameter("args") == null){
+            argsList = new ArrayList<String>();
+        } else {
+            argsList = Splitter.on(",").trimResults().splitToList(request.getParameter("args"));
+        }
+
+        Set<String> timeEndsIndex;
+
+        if(request.getParameter("timeEndsIndex") == null){
+            timeEndsIndex = new HashSet<String>();
+        } else {
+            timeEndsIndex = new HashSet<String>(Splitter.on(",").trimResults().splitToList(request.getParameter("timeEndsIndex")));
+        }
+
+
+        String arg = request.getParameter("args");
+
+        log.info("args: " + arg);
         // get main class
         String mainClass = request.getParameter("mainClass");
         log.info("mainClass: " + mainClass);
@@ -72,15 +106,16 @@ public class SubmitServlet extends HttpServlet {
         Part jarPart = request.getPart("file");
         String fileName = FileUtil.getFileName(jarPart);
         log.info("fileName: " + fileName);
+
         OutputStream out = null;
         InputStream jarContent = null;
         final PrintWriter writer = response.getWriter();
         //create path to save the file
-        String path = "/Users/Qiu/spark-suite";
+        String jarFileName  = SPARK_USER_JAR_PATH + File.separator
+                + fileName;
 
         try {
-            out = new FileOutputStream(new File(path + File.separator
-                    + fileName));
+            out = new FileOutputStream(new File(jarFileName));
             jarContent = jarPart.getInputStream();
 
             int read = 0;
@@ -89,14 +124,15 @@ public class SubmitServlet extends HttpServlet {
             while ((read = jarContent.read(bytes)) != -1) {
                 out.write(bytes, 0, read);
             }
-            writer.println("New file " + fileName + " created at " + path);
-            // LOGGER.log(Level.INFO, "File{0}being uploaded to {1}",
-            //         new Object[]{fileName, path});
+//            writer.println("New file " + fileName + " created at " + path);
+
         } catch (FileNotFoundException fne) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             writer.println("You either did not specify a file to upload or are "
                     + "trying to upload a file to a protected or nonexistent "
                     + "location.");
             writer.println("<br/> ERROR: " + fne.getMessage());
+            return;
 
             // LOGGER. log(Level.SEVERE, "Problems during file upload. Error: {0}",
             //         new Object[]{fne.getMessage()});
@@ -111,7 +147,7 @@ public class SubmitServlet extends HttpServlet {
                 writer.close();
             }
 
-            response.getWriter().write("Upload Successfully!!");
+//            response.getWriter().write("Upload Successfully!!");
         }
         //get content of JAR file
         //give the local jar path to the JOB
@@ -121,7 +157,7 @@ public class SubmitServlet extends HttpServlet {
         Multimap<String, String> keyVlues = HashMultimap.create();
 
         //traverse ConfigurationParameter.txt, get which parameter had been change
-        File file = new File(ConstantConfig.SPARK_CONFIG);
+        File file = new File(ConstantConfig.SPARK_CONFIG_PARAMS);
         @SuppressWarnings("resource")
         Scanner scanner = new Scanner(file);
 
@@ -129,7 +165,7 @@ public class SubmitServlet extends HttpServlet {
             String line = scanner.nextLine();
             //log.info(line);
             String configParameter = request.getParameter(line);
-            log.info(configParameter);
+//            log.info(configParameter);
 
             if (configParameter == null) {
                 continue;
@@ -181,17 +217,23 @@ public class SubmitServlet extends HttpServlet {
                 log.info("key: " + keyValue[0] + " value: " + keyValue[1]);
             }
 
+            FileUtil.backUpAllConfigFiles();
+
             //change parameter
             ChangeParameter changeParameter = new ChangeParameter();
             changeParameter.modifyConfig(propertyList);
 
 
             //TODO: submit job
+            SparkExec sparkExec = new SparkExec();
+            sparkExec.submitSparkApp(jarFileName, mainClass,
+                    pollingTime, checkTimes,
+                    argsList, timeEndsIndex);
 
 
             //recover from the original configuration file
 
-
+            FileUtil.restoreAllConfigFiles();
         }
     }
 

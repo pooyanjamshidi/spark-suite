@@ -36,7 +36,7 @@ public class SparkRequester {
 
 
     public SparkRequester(){
-        url = ConstantConfig.SPARK_CHEKC_URL;
+        url = ConstantConfig.SPARK_CHECK_URL;
     }
 
     public final static void main(String[] args) throws IOException {
