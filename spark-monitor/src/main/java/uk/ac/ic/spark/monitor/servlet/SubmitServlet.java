@@ -230,7 +230,7 @@ public class SubmitServlet extends HttpServlet {
                     pollingTime, checkTimes,
                     argsList, timeEndsIndex);
 
-
+            log.info("Finished: " + i + " job");
             //recover from the original configuration file
 
             FileUtil.restoreAllConfigFiles();

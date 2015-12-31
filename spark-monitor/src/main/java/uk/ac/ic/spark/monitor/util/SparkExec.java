@@ -2,6 +2,7 @@ package uk.ac.ic.spark.monitor.util;
 
 import org.apache.commons.exec.*;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.io.output.ThresholdingOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
@@ -172,6 +173,7 @@ public class SparkExec {
         boolean sparkIsReady = false;
         SparkRequester sparkRequester = new SparkRequester();
         int currentCheckTimes = 0;
+        long currentTimeStamp = System.currentTimeMillis();
 
         while (!resultHandler.hasResult()) {
 
@@ -208,7 +210,7 @@ public class SparkExec {
                         Thread.sleep(pollingTime * 1000);
                         log.info("Generater csv " + (currentCheckTimes + 1) + " times" +
                                 " total " +  checkTimes);
-                        CSVGenerater csvGenerater = new CSVGenerater();
+                        CSVGenerater csvGenerater = new CSVGenerater(currentTimeStamp);
                         csvGenerater.generateAllCsvFiles(appID, System.currentTimeMillis());
                         currentCheckTimes++;
 

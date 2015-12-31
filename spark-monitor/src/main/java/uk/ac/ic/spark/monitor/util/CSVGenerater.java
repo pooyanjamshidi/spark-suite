@@ -36,8 +36,14 @@ public class CSVGenerater {
         add("executorLogs");
     }};
 
+    private long appTimeStamp;
+
+    public CSVGenerater(long appTimeStamp){
+        this.appTimeStamp = appTimeStamp;
+    }
+
     public static void main(String[] args) throws IOException {
-        CSVGenerater csvGenerater = new CSVGenerater();
+        CSVGenerater csvGenerater = new CSVGenerater(System.currentTimeMillis());
 
         SparkRequester sparkRequester = new SparkRequester();
 
@@ -77,7 +83,7 @@ public class CSVGenerater {
     }
 
     public void generateAllCsvFiles(String appID, long timeStamp) throws IOException {
-        CSVGenerater csvGenerater = new CSVGenerater();
+        CSVGenerater csvGenerater = new CSVGenerater(appTimeStamp);
         SparkRequester sparkRequester = new SparkRequester();
 
         HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
@@ -432,7 +438,7 @@ public class CSVGenerater {
 
     private void createTimeStampDIR(String appID,
                                    long timeStamp){
-        File timeStampDIR = new File(CSV_PATH + appID + "/" + timeStamp);
+        File timeStampDIR = new File(CSV_PATH + appID + appTimeStamp + "/" + timeStamp);
         if(!timeStampDIR.exists()){
             timeStampDIR.mkdirs();
         }
