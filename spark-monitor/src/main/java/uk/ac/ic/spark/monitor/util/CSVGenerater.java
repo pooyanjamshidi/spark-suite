@@ -121,7 +121,7 @@ public class CSVGenerater {
                                  long timeStamp){
         createTimeStampDIR(appID, timeStamp);
 
-        File csvFile = new File(CSV_PATH + appID + "/timeStamp/appInfo.csv");
+        File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/timeStamp/appInfo.csv");
 
         try {
             FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(csvFile, Charset.forName("UTF-8"));
@@ -158,7 +158,7 @@ public class CSVGenerater {
                 }
             }
 
-            File csvFile = new File(CSV_PATH + appID + "/"
+            File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
                     + timeStamp + "/jobsInfo.csv");
 
             try {
@@ -215,7 +215,7 @@ public class CSVGenerater {
                 }
             }
 
-            File csvFile = new File(CSV_PATH + appID + "/"
+            File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
                     + timeStamp + "/stagesInfo.csv");
 
             try {
@@ -283,7 +283,7 @@ public class CSVGenerater {
 
 
 
-        File csvFile = new File(CSV_PATH + appID + "/"
+        File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
                 + timeStamp + "/" + jobID + "_"
                 + stageID + "_" + "taskInfo.csv");
 
@@ -392,7 +392,7 @@ public class CSVGenerater {
                 }
             }
 
-            File csvFile = new File(CSV_PATH + appID + "/"
+            File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
                     + timeStamp + "/executorsInfo.csv");
 
             try {
