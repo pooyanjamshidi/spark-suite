@@ -100,6 +100,12 @@ public class CSVGenerater {
                 timeStamp);
 
 
+        csvGenerater.convertStagesToCSV(appID,
+                stageJobMap,
+                sparkRequester.getStagesList(appID),
+                timeStamp);
+
+
         Map<Integer, List<Map<String, Object>>> tasksMap = sparkRequester.getTasksMap(appID, stageJobMap.keySet());
 
         for(int stageID : tasksMap.keySet()){
@@ -116,7 +122,7 @@ public class CSVGenerater {
 
 
 
-    public void convertAppToCSV(String appID,
+    private void convertAppToCSV(String appID,
                                  Map<String, Object> appMap,
                                  long timeStamp){
         createTimeStampDIR(appID, timeStamp);
@@ -371,7 +377,7 @@ public class CSVGenerater {
             if(metricsKey.endsWith("Metrics")){
                 metricsValueBuilder(valueBuilder, metricsKey,metrics);
             } else {
-                valueBuilder.append(metrics.get(metricsKey) + ",");
+                valueBuilder.append(convertObjectToString(metrics.get(metricsKey)) + ",");
             }
 
         }

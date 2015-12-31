@@ -143,10 +143,6 @@ public class SubmitServlet extends HttpServlet {
             if (jarContent != null) {
                 jarContent.close();
             }
-            if (writer != null) {
-                writer.close();
-            }
-
 //            response.getWriter().write("Upload Successfully!!");
         }
         //get content of JAR file
