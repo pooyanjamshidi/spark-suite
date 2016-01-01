@@ -387,7 +387,7 @@ public class CSVGenerater {
         if(executorsList.size() == 0){
             log.warn("jobsList size is 0");
         } else {
-            
+
             executorsList = removeUncompletedMap(executorsList);
 
             for(Map<String, Object> jobInfo : executorsList){
@@ -471,7 +471,7 @@ public class CSVGenerater {
         List<Map<String, Object>> completedMap = new ArrayList<Map<String, Object>>();
 
         for(Map<String, Object> map : originalMapList){
-            if(map.size() == maxMapSize){
+            if(map.size() != maxMapSize){
                 completedMap.add(map);
             } else {
                 log.info("Remove uncompleted map");
