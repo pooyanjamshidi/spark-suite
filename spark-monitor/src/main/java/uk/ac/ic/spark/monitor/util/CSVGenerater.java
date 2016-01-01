@@ -464,7 +464,7 @@ public class CSVGenerater {
 
         for(Map<String, Object> map : originalMapList){
             if(computeKeyNum(map) > maxMapSize){
-                maxMapSize = map.size();
+                maxMapSize = computeKeyNum(map);
             }
         }
 
