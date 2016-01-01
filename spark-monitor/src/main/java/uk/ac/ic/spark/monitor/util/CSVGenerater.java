@@ -4,6 +4,7 @@ package uk.ac.ic.spark.monitor.util;
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.*;
 public class CSVGenerater {
     private static final Logger log = LogManager.getLogger(CSVGenerater.class);
 
-    private static final String CSV_PATH = "./csv/";
+    private final String CSV_PATH = ConstantConfig.SPARK_USER_CSV_PATH + File.separator;
 
     private static final Set<String> jobsExcludeSet = new HashSet<String>(){{
         add("stageIds");
@@ -339,7 +340,6 @@ public class CSVGenerater {
                         } else {
                             valueBuilder.append(convertObjectToString(tasksInfo.get(key)) + ",");
                         }
-
                     }
                     valueBuilder.deleteCharAt(valueBuilder.length() - 1);
                     valueBuilder.append("\n");
@@ -352,10 +352,6 @@ public class CSVGenerater {
                 log.error(e.getMessage(), e);
             }
         }
-
-
-
-
     }
 
 

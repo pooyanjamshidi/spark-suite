@@ -5,6 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -187,6 +188,8 @@ public class SubmitServlet extends HttpServlet {
         Map<String, String> propertyList = new HashMap<String, String>();
         log.info("Combine: " + combinekeyValues.toString());
 
+        List<String> appNameList  = new ArrayList<String>();
+
         for (int i = 0; i < combinekeyValues.size(); i++) {
             // Each combine run once
             Object keyValues = combinekeyValues.get(i);
@@ -222,15 +225,31 @@ public class SubmitServlet extends HttpServlet {
 
             //TODO: submit job
             SparkExec sparkExec = new SparkExec();
-            sparkExec.submitSparkApp(jarFileName, mainClass,
+            String appName = sparkExec.submitSparkApp(jarFileName, mainClass,
                     pollingTime, checkTimes,
                     argsList, timeEndsIndex);
+
+            if(appName.length() != 0 && !appName.startsWith("null")){
+                log.info("Add " + appName +" to appName list");
+                appNameList.add(appName);
+            } else {
+                log.warn("Ignore appName: " + appName);
+            }
+
 
             log.info("Finished: " + i + " job");
             //recover from the original configuration file
 
             FileUtil.restoreAllConfigFiles();
+
+
         }
+
+        response.setContentType("application/json; charset=UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+
+        Gson gson = new Gson();
+        response.getWriter().println(gson.toJson(appNameList));
     }
 
 

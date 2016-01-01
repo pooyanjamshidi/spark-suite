@@ -21,9 +21,10 @@ public class ConstantConfig {
     public static String SPARK_MATRICS;
     public static String SPARK_MATRICS_COPY;
     public static String SPARK_USER_JAR_PATH;
+    public static String SPARK_USER_CSV_PATH;
 
-    public ConstantConfig() {
-    }
+//    public ConstantConfig() {
+//    }
 
     public static void main(String[] args) throws ConfigurationException {
         new PropertiesConfiguration("./conf/spark-suite.properties");
@@ -47,5 +48,6 @@ public class ConstantConfig {
         SPARK_MATRICS_COPY = config.getString("spark.matrics.copy");
         SPARK_CONFIG_PARAMS = config.getString("spark.config.params");
         SPARK_USER_JAR_PATH = config.getString("spark.user.jar.path");
+        SPARK_USER_CSV_PATH = config.getString("spark.user.csv.path");
     }
 }

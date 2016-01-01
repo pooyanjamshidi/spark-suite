@@ -110,9 +110,12 @@ public class SparkExec {
 //        log.info("errStream: " + errStream.toString());
     }
 
-    public void submitSparkApp(String jarPath, String className,
+    public String submitSparkApp(String jarPath, String className,
                                int pollingTime, int checkTimes,
                                List<String> argsList, Set<String> timeEndsIndex) {
+
+        String appID = null;
+        long currentTimeStamp = System.currentTimeMillis();
 
         StringBuilder cmdBuilder = new StringBuilder();
 
@@ -166,14 +169,14 @@ public class SparkExec {
             log.error("outStream: " + outStream.toString());
             log.error("errStream: " + errStream.toString());
             log.error(e.getMessage(), e);
-            return;
+            return "";
         }
 
-        String appID = null;
+//        String appID = null;
         boolean sparkIsReady = false;
         SparkRequester sparkRequester = new SparkRequester();
         int currentCheckTimes = 0;
-        long currentTimeStamp = System.currentTimeMillis();
+
 
         while (!resultHandler.hasResult()) {
 
@@ -210,10 +213,9 @@ public class SparkExec {
                         Thread.sleep(pollingTime * 1000);
                         log.info("Generater csv " + (currentCheckTimes + 1) + " times" +
                                 " total " +  checkTimes);
+                        currentCheckTimes++;
                         CSVGenerater csvGenerater = new CSVGenerater(currentTimeStamp);
                         csvGenerater.generateAllCsvFiles(appID, System.currentTimeMillis());
-                        currentCheckTimes++;
-
                     } catch (InterruptedException e) {
                         log.error(e.getMessage(), e);
                     } catch (IOException e) {
@@ -235,5 +237,8 @@ public class SparkExec {
         log.info("outStream: " + outStream.toString());
         log.error("errStream: " + errStream.toString());
 
+        return appID + currentCheckTimes;
     }
+
+
 }

@@ -4,6 +4,7 @@ package uk.ac.ic.spark.monitor.main;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
+import uk.ac.ic.spark.monitor.servlet.CSVServlet;
 import uk.ac.ic.spark.monitor.servlet.SubmitServlet;
 
 public class ServerMain {
@@ -34,6 +35,7 @@ public class ServerMain {
         // This is a raw Servlet, not a Servlet that has been configured
         // through a web.xml @WebServlet annotation, or anything similar.
         handler.addServletWithMapping(SubmitServlet.class, "/submit");
+        handler.addServletWithMapping(CSVServlet.class, "/csv");
 
         // Start things up!
         server.start();
