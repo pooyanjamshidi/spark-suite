@@ -463,7 +463,7 @@ public class CSVGenerater {
         int maxMapSize = -1;
 
         for(Map<String, Object> map : originalMapList){
-            if(map.size() > maxMapSize){
+            if(computeKeyNum(map) > maxMapSize){
                 maxMapSize = map.size();
             }
         }
@@ -471,7 +471,7 @@ public class CSVGenerater {
         List<Map<String, Object>> completedMapList = new ArrayList<Map<String, Object>>();
 
         for(Map<String, Object> map : originalMapList){
-            if(map.size() == maxMapSize){
+            if(computeKeyNum(map) == maxMapSize){
                 completedMapList.add(map);
             } else {
                 log.info("Remove uncompleted map");
@@ -481,6 +481,20 @@ public class CSVGenerater {
         log.info("originalMapList size: " + originalMapList.size());
         log.info("completedMapList size: " + completedMapList.size());
         return completedMapList;
+    }
+
+    private int computeKeyNum(Map<String, Object> map){
+        int total = 0;
+        for(String key : map.keySet()){
+            if(key.endsWith("Metrics")){
+                Map<String, Object> metrics = (Map<String, Object>)map.get(key);
+                total += computeKeyNum(metrics);
+            } else {
+                total++;
+            }
+        }
+
+        return total;
     }
 
 //    private String converDoubleToString(Double d){
