@@ -5,6 +5,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.io.output.ThresholdingOutputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.ac.ic.spark.monitor.compress.ZipUtil;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
 
 import java.io.IOException;
@@ -237,7 +238,12 @@ public class SparkExec {
         log.info("outStream: " + outStream.toString());
         log.error("errStream: " + errStream.toString());
 
-        return appID + currentCheckTimes;
+        if(appID != null){
+            ZipUtil zipUtil = new ZipUtil(appID + currentTimeStamp);
+            zipUtil.zipAppCSV();
+        }
+
+        return appID + currentTimeStamp;
     }
 
 

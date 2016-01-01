@@ -249,7 +249,9 @@ public class SubmitServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
 
         Gson gson = new Gson();
+        log.info("Return appNameList: " + appNameList);
         response.getWriter().println(gson.toJson(appNameList));
+        writer.close();
     }
 
 
