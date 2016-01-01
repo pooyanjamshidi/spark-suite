@@ -468,17 +468,19 @@ public class CSVGenerater {
             }
         }
 
-        List<Map<String, Object>> completedMap = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> completedMapList = new ArrayList<Map<String, Object>>();
 
         for(Map<String, Object> map : originalMapList){
-            if(map.size() != maxMapSize){
-                completedMap.add(map);
+            if(map.size() == maxMapSize){
+                completedMapList.add(map);
             } else {
                 log.info("Remove uncompleted map");
             }
         }
 
-        return completedMap;
+        log.info("originalMapList size: " + originalMapList.size());
+        log.info("completedMapList size: " + completedMapList.size());
+        return completedMapList;
     }
 
 //    private String converDoubleToString(Double d){
