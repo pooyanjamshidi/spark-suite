@@ -236,22 +236,21 @@ public class SubmitServlet extends HttpServlet {
                 log.warn("Ignore appName: " + appName);
             }
 
-
-            log.info("Finished: " + i + " job");
             //recover from the original configuration file
 
             FileUtil.restoreAllConfigFiles();
-
-
+            
+            log.info("Finished: " + (i + 1) + " job");
         }
 
         response.setContentType("application/json; charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
         response.getWriter().println(gson.toJson(appNameList));
-        writer.close();
+//        writer.close();
+        response.setStatus(HttpServletResponse.SC_OK);
+
+
     }
 
 
