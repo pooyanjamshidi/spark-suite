@@ -239,7 +239,7 @@ public class SubmitServlet extends HttpServlet {
             //recover from the original configuration file
 
             FileUtil.restoreAllConfigFiles();
-            
+
             log.info("Finished: " + (i + 1) + " job");
         }
 

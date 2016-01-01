@@ -66,7 +66,6 @@ public class CSVGenerater {
                 sparkRequester.getExecutorsList("application_1450721503259_0010"),
                 111L);
 
-
 //
 //        Map<Integer, List<Map<String, Object>>> tasksMap = sparkRequester.getTasksMap("application_1450721503259_0010", stageJobMap.keySet());
 //
@@ -79,8 +78,6 @@ public class CSVGenerater {
 //                    122L
 //            );
 //        }
-
-
     }
 
     public void generateAllCsvFiles(String appID, long timeStamp) throws IOException {
@@ -90,24 +87,21 @@ public class CSVGenerater {
         HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
                 sparkRequester.getJobsList(appID));
 
-
         csvGenerater.convertJobsToCSV(appID,
                 sparkRequester.getJobsList(appID),
                 timeStamp);
 
-
         csvGenerater.convertExecutorsToCSV(appID,
                 sparkRequester.getExecutorsList(appID),
                 timeStamp);
-
 
         csvGenerater.convertStagesToCSV(appID,
                 stageJobMap,
                 sparkRequester.getStagesList(appID),
                 timeStamp);
 
-
-        Map<Integer, List<Map<String, Object>>> tasksMap = sparkRequester.getTasksMap(appID, stageJobMap.keySet());
+        Map<Integer, List<Map<String, Object>>> tasksMap =
+                sparkRequester.getTasksMap(appID, stageJobMap.keySet());
 
         for(int stageID : tasksMap.keySet()){
             int jobID = stageJobMap.get(stageID);
@@ -158,6 +152,8 @@ public class CSVGenerater {
         if(jobsList.size() == 0){
             log.warn("jobsList size is 0");
         } else {
+
+            jobsList = removeUncompletedMap(jobsList);
 
             for(Map<String, Object> jobInfo : jobsList){
                 for(String key : jobsExcludeSet){
@@ -214,7 +210,7 @@ public class CSVGenerater {
         } else if (stageJobMap.size() == 0){
             log.warn("jobsList size is 0");
         } else {
-
+            stagesList = removeUncompletedMap(stagesList);
 
             for(Map<String, Object> jobInfo : stagesList){
                 for(String key : stagesExcludeSet){
@@ -267,6 +263,9 @@ public class CSVGenerater {
     }
 
     public HashMap<Integer, Integer> generateStageJobMap(List<Map<String, Object>> jobsList){
+
+
+
         HashMap<Integer, Integer> stageJobMap = new HashMap<Integer, Integer>();
 
         for(Map<String, Object> jobInfo : jobsList){
@@ -286,8 +285,8 @@ public class CSVGenerater {
                                     int jobID, int stageID,
                                     List<Map<String,Object>> taskList,
                                     long timeStamp){
-        createTimeStampDIR(appID, timeStamp);
 
+        createTimeStampDIR(appID, timeStamp);
 
 
         File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
@@ -295,9 +294,10 @@ public class CSVGenerater {
                 + stageID + "_" + "taskInfo.csv");
 
         if(taskList.size() == 0){
-            log.warn("appID: " + appID + " stageID: " + stageID + "taskList size is 0");
+            log.warn("appID: " + appID + " stageID: " + stageID + " taskList size is 0");
         } else {
             try {
+                taskList = removeUncompletedMap(taskList);
                 FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(csvFile, Charset.forName("UTF-8"));
 
                 StringBuilder keyBuilder = new StringBuilder();
@@ -387,6 +387,8 @@ public class CSVGenerater {
         if(executorsList.size() == 0){
             log.warn("jobsList size is 0");
         } else {
+            
+            executorsList = removeUncompletedMap(executorsList);
 
             for(Map<String, Object> jobInfo : executorsList){
                 for(String key : executorsExcludeSet){
@@ -454,6 +456,30 @@ public class CSVGenerater {
         }
     }
 
+
+    private List<Map<String, Object>>
+        removeUncompletedMap(List<Map<String, Object>> originalMapList){
+
+        int maxMapSize = -1;
+
+        for(Map<String, Object> map : originalMapList){
+            if(map.size() > maxMapSize){
+                maxMapSize = map.size();
+            }
+        }
+
+        List<Map<String, Object>> completedMap = new ArrayList<Map<String, Object>>();
+
+        for(Map<String, Object> map : originalMapList){
+            if(map.size() == maxMapSize){
+                completedMap.add(map);
+            } else {
+                log.info("Remove uncompleted map");
+            }
+        }
+
+        return completedMap;
+    }
 
 //    private String converDoubleToString(Double d){
 //        return String.valueOf(d.intValue());
