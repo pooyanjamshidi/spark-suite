@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSV_Reading</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=650, user-scalable=yes">
+
+
+    <!--[if IE]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.3.min.js"><\/script>')</script>
+    
+    <script src="http://jquery-csv.googlecode.com/git/src/jquery.csv.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+
+   
+
+</script>
+
+
+</head>
+<body>
+	
+	<!-- This is needed for the buttons -->
+	<input id="button" type="submit" name="button" value="App1"  onclick="return submitResult(this)"/> 
+	<input id="button" type="submit" name="button" value="App2" onclick="return submitResult(this)"w/> <!-- Only the App2 button currently works -->
+    
+	<div id="map">
+    </div>
+	
+	<div id="test">
+ 	</div>
+	
+<!--
+	<script type='text/javascript' > 
+		var count = 1 ; 
+	</script>
+	
+	<script type='text/javascript'>
+		document.getElementById('button').onclick = function() {
+		alert("button was clicked " + (count++) + " times");
+		};
+	</script>
+	-->
+		<!-- <script>
+	
+</script> 
+-->
+	
+</body>
+
+</html>
+
+
+
+</script>
+
+
+<script>
+
+var dat0;
+var dat1;
+
+//variables for the different csv files
+var data_task_0;
+var data_task_1;
+var data_task_2;
+var data_exe;
+var data_jobs;
+var data_stages;
+//----------------------
+var dat3;
+
+
+function submitResult (button) // After submitting the button 
+{
+
+	if (button.value == "App2") // if the button is for App2 then read the csv files
+	{
+		alert(1);
+	  
+//If you want to replace the button just change the submitResult function and the two inputs of the HTML
+$(document).ready(function() {
+
+
+//****************************************************************************************
+// ----- Use D3 - This is one method that reads csv files (I don't use this, just in case!)
+//****************************************************************************************
+
+
+//creates an array of arrays
+d3.text('http://localhost/application_1450721503259_0010/1451250617/0_0_taskInfo.csv', function(data){ 
+    dat0 = d3.csv.parseRows(data)
+})
+
+//creates an array of objects
+d3.csv('http://localhost/application_1450721503259_0010/1451250617/0_0_taskInfo.csv', function(data){dat1=data})
+
+
+
+//*********************************************************************
+// ----- Use jquery-CSV- This is another method using jquery library
+//*********************************************************************
+
+
+
+// array of arrays
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/0_0_taskInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_task_0 = $.csv.toArrays(data);}
+});
+
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/stagesInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_stages = $.csv.toArrays(data);}
+});
+
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/1_1_taskInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_task_1 = $.csv.toArrays(data);}
+});
+
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/1_2_taskInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_task_2 = $.csv.toArrays(data);}
+});
+
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/executorsInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_exe = $.csv.toArrays(data);}
+});
+
+$.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/jobsInfo.csv",
+    dataType: "text",
+    success: function(data) { 
+        data_jobs = $.csv.toArrays(data);
+	    equalityTest()}
+});
+
+// array of objects -- This is another way for reading csv -- This transforms csv to objects 
+
+/* $.ajax({
+    type: "GET",
+    url: "http://localhost/application_1450721503259_0010/1451250617/0_0_taskInfo.csv",
+    dataType: "text",
+    success: function(data) { dat3 = $.csv.toObjects(data);
+            equalityTest()}
+}); */
+
+
+
+
+
+}); // end document ready
+
+
+//function that shows if the csv files have been read and also finds the sum of the columns of the three files (0_0 task0, 0_1 task1, 0_2 task2)
+//This function can be changed according on how we are going to present data.
+function equalityTest()
+{
+
+  //This is just for validation that the csv files have been read
+    $('#map').html('Length of dat0 is ' + data_task_0.length + '<br>' +
+        'Length of dat1 is ' + data_stages.length + '<br>' +
+        'Length of dat2 is ' + data_task_1.length + '<br>' +
+        'Length of dat3 is ' + data_task_2.length + '<br>' +
+	    'Length of dat3 is ' + data_exe.length + '<br>' +
+	    'Length of dat3 is ' + data_jobs.length + '<br>' +
+	     data_task_0[2][2] + '<br>')
+
+//To access 2d arrays data_task_0[1][0]
+
+// Finding of the sum of the three columns: executor desirialise time, executor run time, JvMGc time. These columns are located in the task_info files	
+	var i=0;
+	var edt0=0,edt1=0,edt2=0;
+	var ert0=0,ert1=0,ert2=0;
+	var jgt0=0,jgt1=0,jgt2=0;
+	var rst0=0,rst1=0,rst2=0;
+	
+	for (i = 1; i<data_task_0.length-1; i++)
+	{
+		//executor desirialise time
+		    edt0 = edt0 + parseInt(data_task_0[i][10]);
+		    edt1 = edt1 + parseInt(data_task_1[i][10]);
+		    edt2 = edt2 + parseInt(data_task_2[i][10]);
+		
+		//executor run time
+			ert0 = ert0 + parseInt(data_task_0[i][11]);
+		    ert1 = ert1 + parseInt(data_task_1[i][11]);
+		    ert2 = ert2 + parseInt(data_task_2[i][11]);
+		//JvMGcTime
+		
+			jgt0 = jgt0 + parseInt(data_task_0[i][13]);
+		    jgt1 = jgt1 + parseInt(data_task_1[i][13]);
+		    jgt2 = jgt2 + parseInt(data_task_2[i][13]);
+		
+		//resultSerializationTime
+		
+			rst0 = rst0 + parseInt(data_task_0[i][14]);
+		    rst1 = rst1 + parseInt(data_task_1[i][14]);
+		    rst2 = rst2 + parseInt(data_task_2[i][14]);
+		    
+			
+	}
+		
+	$('#test').html('answer:' + rst0) // This is how you can present the data to html
+	
+    
+
+}
+
+}
+}
+</script>

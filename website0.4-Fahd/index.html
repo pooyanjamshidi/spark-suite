@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tool GUI</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="css/index.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+<script src="util.js"></script>
+<script src="test.js"></script>
+<link rel="stylesheet" href="flipclock.css">
+<script src="flipclock.js"></script>
+<script src="Chart/Chart.js"></script>
+<script src="count.js"></script>
+</head>
+<body>
+
+  
+  <!-- **************************************************************************************--> 
+  <!-- ******************************NAVIGATION BAR******************************************--> 
+  <!-- **************************************************************************************-->
+  <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation"> 
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+      <a class="navbar-brand" href="index.html">Benchmarking of Apache Spark</a> </div>
+    <ul class="nav navbar-right navbar-top">
+      <li> <a href="#">Something</a> </li>
+      <li> <a href="#">Something</a> </li>
+      <li> <a href="#">Something</a> </li>
+    </ul>
+    <!-- **************************************************************************************--> 
+    <!-- ******************************NAVIGATION LEFT BAR*************************************--> 
+    <!-- 
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul class="nav navbar-nav navbar-left">
+        <li class="active"> <a href="index.html"> Dashboard</a> </li>
+        <li> <a href="charts.html"> Pie Charts</a> </li>
+        <li> <a href="CSV_files.html"> CSV Files</a> </li>
+      </ul>
+    </div>
+    -->
+  </nav>
+  <!-- **************************************************************************************--> 
+  <!-- ******************************CONTAINER***********************************************--> 
+  <!-- **************************************************************************************-->
+  <p></p>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3 class="page-header"> Choose parameter to change, and then select options to deploy topologies </h3>
+      </div>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="col-sm-12">
+        <form role="form" action="">
+          <div class="submitButn panel panel-primary">
+            <div class="panel-body">
+              <div class="row">
+                <!-- **************************************************************************************-->
+                <div class="col-sm-6">
+                  <div class="panel panel-primary" >
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Parameter list</h3>
+                    </div>
+                    <div class="panel-body">
+                      <table id="parameters" class="display" cellspacing="0" width="100%">
+                        <thead>
+                         <tr>
+                            <th>Parameters</th>
+                            <th>Select</th>
+                         </tr>
+                       </thead>
+                      </table>
+                   </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+                <div class="col-sm-6">
+                  <div class="panel panel-primary" >
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Options</h3>
+                    </div>
+                    <div class="panel-body">
+                      <h5 class="panel-title" style="color: #4682B4">Parameter selected:</h5>
+                      <br/>
+                      <p id="para_name" style="color: green">None</p>
+                      <table id="values" class="display" cellspacing="0" width="100%">
+                        <thead style="display:none;">
+                          <tr>
+                            <th></th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <hr/>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+              </div>
+              <!--end of row-->
+              
+                <!-- **************************************************************************************-->
+                <div class="col-sm-12">
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">File Configuration</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                        <!-- **************************************************************************************-->
+                        <div class="col-sm-4">
+                          <div class="panel panel-primary">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">JAR File</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <span class="btn btn-primary btn-file col-xs-offset-1 col-xs-6">
+                                  Browse...<input type="file" name="jar" id="file" onchange="browse()"> 
+                                </span> <label id="namefile">No file chosen</label>
+                              </div>
+                              <div class="row">
+                                <button type="button" onClick="upload()" class="btn btn-primary col-xs-offset-1 col-xs-6">Upload</button>
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px; margin-top:10px;">
+                                Main Class: <input id="main" type="text" name="main">
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Arguments: <input id="arguments" type="text" name="arguments">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- **************************************************************************************-->
+                        <div class="col-sm-offset-3 col-sm-5">
+                          <div class="panel panel-primary">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Set parameters</h3>
+                            </div>
+                            <div class="panel-body">
+                              <table id="para_options" class="display" cellspacing="0" width="100%">
+                                <thead style="display:none;">
+                                  <tr>
+                                    <th></th>
+                                    <th></th>
+                                  </tr>
+                                </thead>
+                                <hr/>
+                              </table> 
+                            </div>
+                          </div>
+                        </div>
+                        <!-- **************************************************************************************-->
+                      </div>
+                      <!--end of row-->
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+                              <!-- **************************************************************************************-->
+                <div class="col-sm-12">
+                  <div class="panel panel-primary">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">Countdown and result</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                        <!-- **************************************************************************************-->
+                        <div class="col-sm-offset-2 col-sm-7">
+                          <div class="panel panel-primary">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Countdown</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="clock col-xs-offset-1 col-xs-6"></div>   
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Select a countdown time: <input id="hours" type="number" name="hours" value="0" step="1" min="0" max="24"> hr <input id="minutes" type="number" name="minutes" value="0" step="1" min="0" max="59"> min <input id="seconds" type="number" name="seconds" value="0" step="1" min="0" max="59"> sec
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Select a polling time: <input id="polling" type="number" name="polling" value="0" step="1" min="0"> ms
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Select the check time: <input id="check" type="number" name="check" value="0" step="1" min="0">
+                              </div>
+                              <div class="row col-xs-offset-1">
+                                <button type="button" onClick="starting()" class="btn btn-primary col-xs-offset-1 col-xs-6">Start Simulation</button>
+                              </div>
+                              <div class="message"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- *************************************************************************************** -->
+                        <!-- *******************************  GRAPH  *********************************************** -->
+                        <!-- *************************************************************************************** -->
+                  <!--      <div class="col-sm-5">
+                          <div class="panel panel-primary">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Graph</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <canvas id="chart"></canvas>   
+                              </div>
+                            </div>
+                          </div>
+                        </div> -->
+                        <!-- **************************************************************************************-->
+                      </div>
+                      <!--end of row-->
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-offset-5 col-sm-12">
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#waiting" onClick="page_submit()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        
+        <!--
+        <div class="col-sm-12">
+          
+          <div class="row">
+            
+            
+           
+            <div class="col-sm-offset-2 col-sm-4">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Taking questionnaire</h4>
+                </div>
+                <div class="panel-body">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Questionnaire</button>
+                </div>
+              </div>
+            </div>
+           
+            
+          </div>
+        </div>
+      -->
+      </div>
+    </div>
+  </div>
+<!--end of container-->  
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog" data-backdrop="static">
+  <div class="modal-dialog modal-lg"> 
+    
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Questionnaire</h4>
+      </div>
+      <div class="modal-body">
+        <table class="col-sm-12">
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary" >
+                <div class="panel-heading" style="background-color: grey">
+                  <h4>Do you think the tool is useful?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question1 col-sm-offset-1 ">
+                    <input type="radio" name="optradio1">
+                    Agree</label>
+                  <label class="question1 col-sm-offset-2 ">
+                    <input type="radio" name="optradio1">
+                    Neither agree nor disagree</label>
+                  <label class="question1 col-sm-offset-2 ">
+                    <input type="radio" name="optradio1">
+                    Disagree</label>
+                </div>
+              </div>
+          </tr>
+          </td>
+          
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think the tool is useful?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question2 col-sm-offset-1 ">
+                    <input type="radio" name="optradio2">
+                    Agree</label>
+                  <label class="question2 col-sm-offset-2 ">
+                    <input type="radio" name="optradio2">
+                    Neither agree nor disagree</label>
+                  <label class="question2 col-sm-offset-2 ">
+                    <input type="radio" name="optradio2">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think this tool is easy to use?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question3 col-sm-offset-1 ">
+                    <input type="radio" name="optradio3">
+                    Agree</label>
+                  <label class="question3 col-sm-offset-2 ">
+                    <input type="radio" name="optradio3">
+                    Neither agree nor disagree</label>
+                  <label class="question3 col-sm-offset-2 ">
+                    <input type="radio" name="optradio3">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Do you think the tool have good performance?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question4 col-sm-offset-1 ">
+                    <input type="radio" name="optradio4">
+                    Agree</label>
+                  <label class="question4 col-sm-offset-2 ">
+                    <input type="radio" name="optradio4">
+                    Neither agree nor disagree</label>
+                  <label class="question4 col-sm-offset-2 ">
+                    <input type="radio" name="optradio4">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+          <tr>
+            <td><div class="col-sm-12">
+              <div class="panel panel-primary">
+                <div class="panel-heading">
+                  <h4>Would you like to introduce this tool to your friend?</h4>
+                </div>
+                <div class="panel-body">
+                  <label class="question5 col-sm-offset-1 ">
+                    <input type="radio" name="optradio5">
+                    Agree</label>
+                  <label class="question5 col-sm-offset-2 ">
+                    <input type="radio" name="optradio5">
+                    Neither agree nor disagree</label>
+                  <label class="question5 col-sm-offset-2 ">
+                    <input type="radio" name="optradio5">
+                    Disagree</label>
+                </div>
+              </div></td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--end of modal-->
+</body>
+</html>

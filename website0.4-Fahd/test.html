@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tool GUI</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="css/index.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+<script src="test.js"></script>
+</head>
+<body>
+
+  
+  <!-- **************************************************************************************--> 
+  <!-- ******************************CONTAINER***********************************************--> 
+  <!-- **************************************************************************************-->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3 class="page-header"> Choose parameter to change, and then select options to deploy topologies </h3>
+      </div>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="col-sm-12">
+        <form role="form" action="">
+          <div class="submitButn panel panel-success">
+            <div class="panel-body">
+              <div class="row">
+                <!-- **************************************************************************************-->
+              </div>
+              <!--end of row-->              
+                <!-- **************************************************************************************-->
+                <div class="col-sm-12">
+                  <div class="panel panel-warning">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">File Configuration</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                        <!-- **************************************************************************************-->
+                        <div class="col-sm-4">
+                          <div class="panel panel-info">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">JAR File</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <span class="btn btn-info btn-file col-xs-offset-1 col-xs-6">
+                                  Browse...<input type="file" name="jar" id="file">
+                                </span>
+                              </div>
+                              <div class="row">
+                                <button type="button" onClick="upload()" class="btn btn-info col-xs-offset-1 col-xs-6">Upload</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- **************************************************************************************-->
+                      </div>
+                      <!--end of row-->
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-offset-5 col-sm-12">
+                  <button class="btn btn-success" onClick="page_submit()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<!--end of container-->  
+</body>
+</html>

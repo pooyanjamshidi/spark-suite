@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Tool GUI</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="css/index.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.10/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.10/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" href="flipclock.css">
+<script src="flipclock.js"></script>
+<script src="Chart/Chart.js"></script>
+<script src="count.js"></script>
+</head>
+<body>
+
+  
+  <!-- **************************************************************************************--> 
+  <!-- ******************************CONTAINER***********************************************--> 
+  <!-- **************************************************************************************-->
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <h3 class="page-header"> Countdown </h3>
+      </div>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="col-sm-12">
+        <form role="form" action="">
+          <div class="submitButn panel panel-success">
+            <div class="panel-body">
+              <div class="row">
+                <!-- **************************************************************************************-->
+              </div>
+              <!--end of row-->              
+                <!-- **************************************************************************************-->
+                <div class="col-sm-12">
+                  <div class="panel panel-warning">
+                    <div class="panel-heading">
+                      <h3 class="panel-title">File Configuration</h3>
+                    </div>
+                    <div class="panel-body">
+                      <div class="row">
+                        <!-- **************************************************************************************-->
+                        <div class="col-sm-7">
+                          <div class="panel panel-info">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Countdown</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <div class="clock col-xs-offset-1 col-xs-6"></div>   
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Select a countdown time: <input id="hours" type="number" name="hours" value="0" step="1" min="0" max="24"> hr <input id="minutes" type="number" name="minutes" value="0" step="1" min="0" max="59"> min <input id="seconds" type="number" name="seconds" value="0" step="1" min="0" max="59"> sec
+                              </div>
+                              <div class="row col-xs-offset-1" style="margin-bottom:10px;">
+                                Select a polling time: <input id="ms" type="number" name="ms" value="0" step="1" min="0"> ms
+                              </div>
+                              <div class="row col-xs-offset-1">
+                                <button type="button" onClick="starting()" class="btn btn-info col-xs-offset-1 col-xs-6">Start Simulation</button>
+                              </div>
+                              <div class="message"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- *************************************************************************************** -->
+                        <!-- *******************************  GRAPH  *********************************************** -->
+                        <!-- *************************************************************************************** -->
+                        <div class="col-sm-5">
+                          <div class="panel panel-info">
+                            <div class="panel-heading">
+                              <h3 class="panel-title">Graph</h3>
+                            </div>
+                            <div class="panel-body">
+                              <div class="row">
+                                <canvas id="chart"></canvas>   
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- **************************************************************************************-->
+                      </div>
+                      <!--end of row-->
+                    </div>
+                  </div>
+                </div>
+                <!-- **************************************************************************************-->
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-sm-offset-5 col-sm-12">
+                  <button class="btn btn-success" onClick="page_submit()">Submit</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<!--end of container-->  
+</body>
+</html>
