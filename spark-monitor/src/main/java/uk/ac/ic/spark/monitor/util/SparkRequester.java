@@ -39,6 +39,13 @@ public class SparkRequester {
         url = ConstantConfig.SPARK_CHECK_URL;
     }
 
+    public void setToHistory(){
+        url = ConstantConfig.SPARK_HISTORY_URL;
+    }
+
+
+
+
     public final static void main(String[] args) throws IOException {
         try{
             SparkRequester sparkRequester = new SparkRequester();

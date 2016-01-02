@@ -248,8 +248,21 @@ public class SparkExec {
             log.info("Waiting for app end");
         }
 
+
         log.info("outStream: " + outStream.toString());
         log.error("errStream: " + errStream.toString());
+
+        log.info("App finished. Generate final csv.");
+
+        CSVGenerater csvGenerater = new CSVGenerater(currentTimeStamp);
+
+        try {
+            csvGenerater.generateFinalCsvFiles(appID, changedConfigMap,
+                    System.currentTimeMillis());
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+
 
         if(appID != null){
             ZipUtil zipUtil = new ZipUtil(appID + currentTimeStamp);

@@ -7,6 +7,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 public class ConstantConfig {
     public static String SPARK_BIN_DIR;
     public static String SPARK_CHECK_URL;
+    public static String SPARK_HISTORY_URL;
     public static String SPARK_ENV_SH;
     public static String SPARK_ENV_SH_COPY;
     public static String SPARK_CONF;
@@ -34,6 +35,7 @@ public class ConstantConfig {
         PropertiesConfiguration config = new PropertiesConfiguration("./conf/spark-suite.properties");
         SPARK_BIN_DIR = config.getString("spark.bin.dir");
         SPARK_CHECK_URL = config.getString("spark.app.check.url");
+        SPARK_HISTORY_URL = config.getString("spark.app.history.url");
         SPARK_ENV_SH = config.getString("spark.env.sh");
         SPARK_ENV_SH_COPY = config.getString("spark.env.sh.copy");
         SPARK_CONF = config.getString("spark.conf.sh");

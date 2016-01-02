@@ -120,6 +120,54 @@ public class CSVGenerater {
     }
 
 
+    public void generateFinalCsvFiles(String appID, Map<String, String> changedConfigMap,
+                                    long timeStamp) throws IOException {
+
+        CSVGenerater csvGenerater = new CSVGenerater(appTimeStamp);
+        SparkRequester sparkRequester = new SparkRequester();
+        sparkRequester.setToHistory();
+
+        HashMap<String, Object> realAppMap = (HashMap<String, Object>)sparkRequester.getAppsList().get(0);
+
+        String realAppID = (String)realAppMap.get("id");
+
+        csvGenerater.generateConfigCSV(appID, changedConfigMap, timeStamp);
+
+        csvGenerater.convertAppToCSV(appID, realAppMap,timeStamp);
+
+        HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
+                sparkRequester.getJobsList(realAppID));
+
+        csvGenerater.convertJobsToCSV(appID,
+                sparkRequester.getJobsList(realAppID),
+                timeStamp);
+
+        csvGenerater.convertExecutorsToCSV(appID,
+                sparkRequester.getExecutorsList(realAppID),
+                timeStamp);
+
+        csvGenerater.convertStagesToCSV(appID,
+                stageJobMap,
+                sparkRequester.getStagesList(realAppID),
+                timeStamp);
+
+        Map<Integer, List<Map<String, Object>>> tasksMap =
+                sparkRequester.getTasksMap(realAppID, stageJobMap.keySet());
+
+        for(int stageID : tasksMap.keySet()){
+            int jobID = stageJobMap.get(stageID);
+            csvGenerater.convertTasksToCSV(appID,
+                    jobID,
+                    stageID,
+                    tasksMap.get(stageID),
+                    timeStamp
+            );
+        }
+
+    }
+
+
+
 
     private void convertAppToCSV(String appID,
                                  Map<String, Object> appMap,
@@ -127,6 +175,17 @@ public class CSVGenerater {
         createTimeStampDIR(appID, timeStamp);
 
         File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/timeStamp/appInfo.csv");
+
+        List<Map<String, Object>> attempts = (List<Map<String, Object>>)appMap.get("attempts");
+
+        Map<String, Object> attempt = attempts.get(0);
+
+        for(String key : attempt.keySet()){
+            appMap.put(key, attempt.get(key));
+        }
+
+        appMap.remove("id");
+        appMap.remove("attempts");
 
         try {
             FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(csvFile, Charset.forName("UTF-8"));
