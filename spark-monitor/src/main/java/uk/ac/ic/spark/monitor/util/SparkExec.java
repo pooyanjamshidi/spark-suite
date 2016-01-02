@@ -225,7 +225,10 @@ public class SparkExec {
                                 " total " +  checkTimes);
                         currentCheckTimes++;
                         CSVGenerater csvGenerater = new CSVGenerater(currentTimeStamp);
-                        csvGenerater.generateAllCsvFiles(appID, System.currentTimeMillis());
+                        
+                        csvGenerater.generateAllCsvFiles(appID, changedConfigMap,
+                                System.currentTimeMillis());
+
                     } catch (InterruptedException e) {
                         log.error(e.getMessage(), e);
                     } catch (IOException e) {
