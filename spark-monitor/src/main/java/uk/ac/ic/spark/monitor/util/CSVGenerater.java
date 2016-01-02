@@ -127,7 +127,7 @@ public class CSVGenerater {
         SparkRequester sparkRequester = new SparkRequester();
         sparkRequester.setToHistory();
 
-        HashMap<String, Object> realAppMap = (HashMap<String, Object>)sparkRequester.getAppsList().get(0);
+        Map<String, Object> realAppMap = sparkRequester.getAppsList().get(0);
 
         String realAppID = (String)realAppMap.get("id");
 
