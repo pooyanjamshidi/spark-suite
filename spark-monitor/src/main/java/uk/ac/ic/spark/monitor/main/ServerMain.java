@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHandler;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.servlet.CSVServlet;
+import uk.ac.ic.spark.monitor.servlet.SubmitDebugServlet;
 import uk.ac.ic.spark.monitor.servlet.SubmitServlet;
 
 public class ServerMain {
@@ -36,6 +37,7 @@ public class ServerMain {
         // through a web.xml @WebServlet annotation, or anything similar.
         handler.addServletWithMapping(SubmitServlet.class, "/submit");
         handler.addServletWithMapping(CSVServlet.class, "/csv");
+        handler.addServletWithMapping(SubmitDebugServlet.class, "/submit-debug");
 
         // Start things up!
         server.start();

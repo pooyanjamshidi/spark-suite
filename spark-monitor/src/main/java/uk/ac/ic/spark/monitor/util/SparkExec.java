@@ -221,11 +221,12 @@ public class SparkExec {
                 } else {
                     try {
                         Thread.sleep(pollingTime * 1000);
+
                         log.info("Generater csv " + (currentCheckTimes + 1) + " times" +
                                 " total " +  checkTimes);
                         currentCheckTimes++;
                         CSVGenerater csvGenerater = new CSVGenerater(currentTimeStamp);
-                        
+
                         csvGenerater.generateAllCsvFiles(appID, changedConfigMap,
                                 System.currentTimeMillis());
 
