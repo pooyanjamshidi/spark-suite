@@ -201,7 +201,20 @@ public class CSVGenerater {
             keyBuilder.append("\n");
 
             fileWriter.write(keyBuilder.toString());
+
+
+
+            StringBuilder valueBuilder = new StringBuilder();
+
+            for(String key : appMap.keySet()){
+                valueBuilder.append(convertObjectToString(appMap.get(key)) + ",");
+            }
+            valueBuilder.deleteCharAt(valueBuilder.length() - 1);
+            valueBuilder.append("\n");
+            fileWriter.write(valueBuilder.toString());
+
             fileWriter.close();
+            
 
         } catch (IOException e) {
             log.error(e.getMessage(), e);
