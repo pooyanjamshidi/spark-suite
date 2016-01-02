@@ -9,8 +9,11 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
+import uk.ac.ic.spark.monitor.util.ChangeParameter;
+import uk.ac.ic.spark.monitor.util.FileUtil;
 import uk.ac.ic.spark.monitor.util.SparkExec;
 
+import java.io.IOException;
 import java.util.*;
 
 public class InstantMain {
@@ -18,7 +21,7 @@ public class InstantMain {
     private static final Logger log = LogManager.getLogger(InstantMain.class);
     private static final Options options = new Options();
 
-    public static void main(final String[] args) throws ConfigurationException {
+    public static void main(final String[] args) throws ConfigurationException, IOException {
 
         initOptions();
 
@@ -91,18 +94,21 @@ public class InstantMain {
 
 
             for(Map<String, String> paramsMap : combinedParams){
-                //TODO:: change configfile and submit job.
+
+                FileUtil.backUpAllConfigFiles();
+
                 log.info("Change config params map: " + paramsMap);
-//                ChangeParameter changeParameter = new ChangeParameter();
-//                changeParameter.modifyConfig(paramsMap);
+                ChangeParameter changeParameter = new ChangeParameter();
+                changeParameter.modifyConfig(paramsMap);
 //                log.info("Submit Spark Job: Fake Now");
 //                log.info("Get application ID: application_1446044705002_0009");
 
-                SparkExec sparkExec = new SparkExec();
+                SparkExec sparkExec = new SparkExec(paramsMap);
                 sparkExec.submitSparkApp(jarPath, className,
                         pollingTime, checkTimes,
                         argsList, timeEndsIndex);
 
+                FileUtil.restoreAllConfigFiles();
 //                SparkRequester sparkRequester = new SparkRequester();
 //
 //                log.info("JobInfo: " + sparkRequester.getJobsList("application_1446044705002_0009"));

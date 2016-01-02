@@ -9,6 +9,7 @@ import uk.ac.ic.spark.monitor.compress.ZipUtil;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,14 @@ public class SparkExec {
 //    private static final long pollingTime = 1000;
 //    private static final long waitingtTime = 1000 * 1000;
 
+
+    private Map<String,String> changedConfigMap
+            = new HashMap<String, String>();
+
+
+    public SparkExec(Map<String,String> changedConfigMap){
+        this.changedConfigMap = changedConfigMap;
+    }
 
     public static void main(String[] arguments) {
 

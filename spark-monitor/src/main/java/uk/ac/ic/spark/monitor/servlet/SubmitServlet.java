@@ -224,7 +224,7 @@ public class SubmitServlet extends HttpServlet {
 
 
             //TODO: submit job
-            SparkExec sparkExec = new SparkExec();
+            SparkExec sparkExec = new SparkExec(propertyList);
             String appName = sparkExec.submitSparkApp(jarFileName, mainClass,
                     pollingTime, checkTimes,
                     argsList, timeEndsIndex);

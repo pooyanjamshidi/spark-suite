@@ -80,9 +80,13 @@ public class CSVGenerater {
 //        }
     }
 
-    public void generateAllCsvFiles(String appID, long timeStamp) throws IOException {
+    public void generateAllCsvFiles(String appID, Map<String, String> changedConfigMap,
+                                    long timeStamp) throws IOException {
+
         CSVGenerater csvGenerater = new CSVGenerater(appTimeStamp);
         SparkRequester sparkRequester = new SparkRequester();
+
+        csvGenerater.generateConfigCSV(appID, changedConfigMap, timeStamp);
 
         HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
                 sparkRequester.getJobsList(appID));
@@ -429,6 +433,47 @@ public class CSVGenerater {
             } catch (IOException e) {
                 log.error(e.getMessage(), e);
             }
+        }
+    }
+
+
+    private void generateConfigCSV(String appID,
+                                   Map<String, String> changedConfigMap,
+                                   long timeStamp){
+
+        createTimeStampDIR(appID, timeStamp);
+
+        File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/"
+                + timeStamp + "/config.csv");
+
+        try {
+            FileWriterWithEncoding fileWriter = new FileWriterWithEncoding(csvFile, Charset.forName("UTF-8"));
+
+            StringBuilder keyBuilder = new StringBuilder();
+            for(String key : changedConfigMap.keySet()){
+                keyBuilder.append(key + ",");
+            }
+
+            keyBuilder.deleteCharAt(keyBuilder.length() - 1);
+            keyBuilder.append("\n");
+
+            fileWriter.write(keyBuilder.toString());
+
+
+            StringBuilder valueBuilder = new StringBuilder();
+
+            for(String key : changedConfigMap.keySet()){
+                valueBuilder.append(convertObjectToString(changedConfigMap.get(key)) + ",");
+            }
+            valueBuilder.deleteCharAt(valueBuilder.length() - 1);
+            valueBuilder.append("\n");
+            fileWriter.write(valueBuilder.toString());
+
+
+            fileWriter.close();
+
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
         }
     }
 
