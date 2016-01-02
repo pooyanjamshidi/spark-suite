@@ -131,6 +131,8 @@ public class CSVGenerater {
 
         String realAppID = (String)realAppMap.get("id");
 
+        log.info("realAppID: " + realAppID);
+
         csvGenerater.generateConfigCSV(appID, changedConfigMap, timeStamp);
 
         csvGenerater.convertAppToCSV(appID, realAppMap,timeStamp);
@@ -174,7 +176,7 @@ public class CSVGenerater {
                                  long timeStamp){
         createTimeStampDIR(appID, timeStamp);
 
-        File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/timeStamp/appInfo.csv");
+        File csvFile = new File(CSV_PATH + appID + appTimeStamp + "/" + timeStamp + "/appInfo.csv");
 
         List<Map<String, Object>> attempts = (List<Map<String, Object>>)appMap.get("attempts");
 
