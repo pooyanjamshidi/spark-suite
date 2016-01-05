@@ -111,7 +111,10 @@ public class SubmitDebugServlet extends HttpServlet {
         }
 
 
-        response.setContentType("application/json; charset=UTF-8");
+//        response.setContentType("application/json; charset=UTF-8");
+
+        response.setContentType("text/plain; charset=UTF-8");
+
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
 
