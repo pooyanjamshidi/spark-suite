@@ -214,7 +214,7 @@ public class CSVGenerater {
             fileWriter.write(valueBuilder.toString());
 
             fileWriter.close();
-            
+
 
         } catch (IOException e) {
             log.error(e.getMessage(), e);

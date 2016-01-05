@@ -149,6 +149,25 @@ public class SubmitServlet extends HttpServlet {
         //get content of JAR file
         //give the local jar path to the JOB
 
+        String PARAMETERS = request.getParameter("PARAMETERS");
+
+        String PARAMETERS_VALUE = request.getParameter("PARAMETERS_VALUE");
+
+        List<String> parameterList = Splitter.on(",").trimResults()
+                .omitEmptyStrings().splitToList(PARAMETERS_VALUE);
+
+        List<String> parametersValueList = Splitter.on(";").trimResults()
+                .omitEmptyStrings().splitToList(PARAMETERS_VALUE);
+
+
+        log.info("parameterList size: " + parameterList.size());
+        log.info("parametersValueList: " + parametersValueList.size());
+
+        Map<String, String> paramsMap = new HashMap<String, String>();
+
+        for(int i = 0; i < parameterList.size(); i++){
+            paramsMap.put(parameterList.get(i), parametersValueList.get(i));
+        }
 
 
         Multimap<String, String> keyVlues = HashMultimap.create();
@@ -161,7 +180,7 @@ public class SubmitServlet extends HttpServlet {
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             //log.info(line);
-            String configParameter = request.getParameter(line);
+            String configParameter = paramsMap.get(line);
 //            log.info(configParameter);
 
             if (configParameter == null) {
