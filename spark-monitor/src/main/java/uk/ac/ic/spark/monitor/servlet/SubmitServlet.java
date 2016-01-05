@@ -154,14 +154,14 @@ public class SubmitServlet extends HttpServlet {
         String PARAMETERS_VALUE = request.getParameter("PARAMETERS_VALUE");
 
         List<String> parameterList = Splitter.on(",").trimResults()
-                .omitEmptyStrings().splitToList(PARAMETERS_VALUE);
+                .omitEmptyStrings().splitToList(PARAMETERS);
 
         List<String> parametersValueList = Splitter.on(";").trimResults()
                 .omitEmptyStrings().splitToList(PARAMETERS_VALUE);
 
 
-        log.info("parameterList size: " + parameterList.size());
-        log.info("parametersValueList: " + parametersValueList.size());
+        log.info("parameterList : " + parameterList);
+        log.info("parametersValue: " + parametersValueList);
 
         Map<String, String> paramsMap = new HashMap<String, String>();
 
