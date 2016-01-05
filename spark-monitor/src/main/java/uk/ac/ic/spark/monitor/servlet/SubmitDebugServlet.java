@@ -45,7 +45,11 @@ public class SubmitDebugServlet extends HttpServlet {
             throws ServletException, IOException {
 
         List<String> appNameList = new ArrayList<String>();
-        appNameList.add("test1");
+        appNameList.add("Sort1451764230681");
+        appNameList.add("Sort1451764127803");
+        appNameList.add("Sort1451764033591");
+
+
 
         //add the multipart config
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
@@ -101,7 +105,7 @@ public class SubmitDebugServlet extends HttpServlet {
 
 
         try {
-            Thread.sleep(1000 * 60);
+            Thread.sleep(1000 * 5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -110,7 +114,16 @@ public class SubmitDebugServlet extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
-        response.getWriter().println(gson.toJson(appNameList));
+
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for(String appName : appNameList){
+            stringBuilder.append(appName + ",");
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
+//        response.getWriter().println(gson.toJson(appNameList));
+        response.getWriter().println(stringBuilder.toString());
 //        writer.close();
         response.setStatus(HttpServletResponse.SC_OK);
 
