@@ -120,14 +120,14 @@ public class SubmitDebugServlet extends HttpServlet {
         log.info("Return appNameList: " + appNameList);
 
 
-        StringBuilder stringBuilder = new StringBuilder();
-        for(String appName : appNameList){
-            stringBuilder.append(appName + ",");
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for(String appName : appNameList){
+//            stringBuilder.append(appName + ",");
+//        }
+//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 
-//        response.getWriter().println(gson.toJson(appNameList));
-        response.getWriter().println(stringBuilder.toString());
+        response.getWriter().println(gson.toJson(appNameList));
+//        response.getWriter().println(stringBuilder.toString());
 //        writer.close();
         response.setStatus(HttpServletResponse.SC_OK);
 

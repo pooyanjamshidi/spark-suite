@@ -263,6 +263,8 @@ public class SubmitServlet extends HttpServlet {
         }
 
         response.setContentType("application/json; charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
         response.getWriter().println(gson.toJson(appNameList));
