@@ -1,17 +1,9 @@
 package uk.ac.ic.spark.monitor.servlet;
 
-import com.google.common.base.CharMatcher;
-import com.google.common.base.Splitter;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.ac.ic.spark.monitor.config.ConstantConfig;
-import uk.ac.ic.spark.monitor.main.InstantMain;
-import uk.ac.ic.spark.monitor.util.ChangeParameter;
-import uk.ac.ic.spark.monitor.util.FileUtil;
-import uk.ac.ic.spark.monitor.util.SparkExec;
+import uk.ac.ic.spark.monitor.file.FileUtil;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -45,7 +37,11 @@ public class SubmitDebugServlet extends HttpServlet {
             throws ServletException, IOException {
 
         List<String> appNameList = new ArrayList<String>();
-        appNameList.add("test1");
+        appNameList.add("Sort1451764230681");
+        appNameList.add("Sort1451764127803");
+        appNameList.add("Sort1451764033591");
+
+
 
         //add the multipart config
         MultipartConfigElement multipartConfigElement = new MultipartConfigElement("/tmp");
@@ -101,16 +97,29 @@ public class SubmitDebugServlet extends HttpServlet {
 
 
         try {
-            Thread.sleep(1000 * 60);
+            Thread.sleep(1000 * 5);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
 
-        response.setContentType("application/json; charset=UTF-8");
+//        response.setContentType("application/json; charset=UTF-8");
+
+        response.setContentType("text/plain; charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
+
+
+//        StringBuilder stringBuilder = new StringBuilder();
+//        for(String appName : appNameList){
+//            stringBuilder.append(appName + ",");
+//        }
+//        stringBuilder.deleteCharAt(stringBuilder.length() - 1);
+
         response.getWriter().println(gson.toJson(appNameList));
+//        response.getWriter().println(stringBuilder.toString());
 //        writer.close();
         response.setStatus(HttpServletResponse.SC_OK);
 

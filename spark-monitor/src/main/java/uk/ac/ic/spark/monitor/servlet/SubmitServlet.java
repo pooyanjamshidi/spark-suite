@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.main.InstantMain;
-import uk.ac.ic.spark.monitor.util.ChangeParameter;
-import uk.ac.ic.spark.monitor.util.FileUtil;
-import uk.ac.ic.spark.monitor.util.SparkExec;
+import uk.ac.ic.spark.monitor.file.ChangeParameter;
+import uk.ac.ic.spark.monitor.file.FileUtil;
+import uk.ac.ic.spark.monitor.spark.SparkExec;
 //import uk.ac.ic.spark.monitor.util.SparkRequester;
 
 import javax.servlet.MultipartConfigElement;
@@ -149,6 +149,25 @@ public class SubmitServlet extends HttpServlet {
         //get content of JAR file
         //give the local jar path to the JOB
 
+        String PARAMETERS = request.getParameter("PARAMETERS");
+
+        String PARAMETERS_VALUE = request.getParameter("PARAMETERS_VALUE");
+
+        List<String> parameterList = Splitter.on(",").trimResults()
+                .omitEmptyStrings().splitToList(PARAMETERS);
+
+        List<String> parametersValueList = Splitter.on(";").trimResults()
+                .omitEmptyStrings().splitToList(PARAMETERS_VALUE);
+
+
+        log.info("parameterList : " + parameterList);
+        log.info("parametersValue: " + parametersValueList);
+
+        Map<String, String> paramsMap = new HashMap<String, String>();
+
+        for(int i = 0; i < parameterList.size(); i++){
+            paramsMap.put(parameterList.get(i), parametersValueList.get(i));
+        }
 
 
         Multimap<String, String> keyVlues = HashMultimap.create();
@@ -161,7 +180,7 @@ public class SubmitServlet extends HttpServlet {
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             //log.info(line);
-            String configParameter = request.getParameter(line);
+            String configParameter = paramsMap.get(line);
 //            log.info(configParameter);
 
             if (configParameter == null) {
@@ -244,6 +263,8 @@ public class SubmitServlet extends HttpServlet {
         }
 
         response.setContentType("application/json; charset=UTF-8");
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         Gson gson = new Gson();
         log.info("Return appNameList: " + appNameList);
         response.getWriter().println(gson.toJson(appNameList));
