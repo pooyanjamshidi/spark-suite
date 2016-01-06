@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor.util;
+package uk.ac.ic.spark.monitor.file;
 
 
 import java.io.*;
@@ -9,8 +9,8 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import uk.ac.ic.spark.monitor.config.ConstantConfig;
 import uk.ac.ic.spark.monitor.exceptions.*;
-import uk.ac.ic.spark.monitor.config.*;
 
 public class ChangeParameter{
 
@@ -219,16 +219,15 @@ public class ChangeParameter{
 	}//modifyParameter
 
 
-	//test
-	public static void main(String[] args){
-		Map<String, String> propertyList = new HashMap<String, String>();
-		propertyList.put("SPARK_CONF_DIR", "test1");
-		propertyList.put("SPARK_LOG_DIR", "test66665");
-		propertyList.put("SPARK_IDENT_STRING", "testerere");
-		propertyList.put("SPARK_NICENESS", "test1rt");
-		propertyList.put("spark.master", "spark://master:7077");
-		propertyList.put("spark.eventLog.compress", "qjx19930605");
-		ChangeParameter changeParameter = new ChangeParameter();
-		changeParameter.modifyConfig(propertyList);
-	}
+//	//test
+//	public static void main(String[] args){
+//		Map<String, String> propertyList = new HashMap<String, String>();
+//		propertyList.put("SPARK_CONF_DIR", "test1");
+//		propertyList.put("SPARK_LOG_DIR", "test66665");
+//		propertyList.put("SPARK_IDENT_STRING", "testerere");
+//		propertyList.put("SPARK_NICENESS", "test1rt");
+//		propertyList.put("spark.master", "spark://master:7077");
+//		ChangeParameter changeParameter = new ChangeParameter();
+//		changeParameter.modifyConfig(propertyList);
+//	}
 }

@@ -27,9 +27,9 @@ public class ConstantConfig {
 //    public ConstantConfig() {
 //    }
 
-    public static void main(String[] args) throws ConfigurationException {
-        new PropertiesConfiguration("./conf/spark-suite.properties");
-    }
+//    public static void main(String[] args) throws ConfigurationException {
+//        new PropertiesConfiguration("./conf/spark-suite.properties");
+//    }
 
     public static void init() throws ConfigurationException {
         PropertiesConfiguration config = new PropertiesConfiguration("./conf/spark-suite.properties");

@@ -1,10 +1,11 @@
-package uk.ac.ic.spark.monitor.util;
+package uk.ac.ic.spark.monitor.file;
 
 
 import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.ac.ic.spark.monitor.config.ConstantConfig;
+import uk.ac.ic.spark.monitor.spark.SparkRequester;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,42 +44,42 @@ public class CSVGenerater {
         this.appTimeStamp = appTimeStamp;
     }
 
-    public static void main(String[] args) throws IOException {
-        CSVGenerater csvGenerater = new CSVGenerater(System.currentTimeMillis());
-
-        SparkRequester sparkRequester = new SparkRequester();
-
-
-//        csvGenerater.convertJobsToCSV("application_1450721503259_0010",
-//                sparkRequester.getJobsList("application_1450721503259_0010"),
-//                9232L);
-
-
-        HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
-                sparkRequester.getJobsList("application_1450721503259_0010"));
-
-//        csvGenerater.convertStagesToCSV("application_1450721503259_0010",
-//                stageJobMap,
-//                sparkRequester.getStagesList("application_1450721503259_0010"),
-//                9232L);
-
-        csvGenerater.convertExecutorsToCSV("application_1450721503259_0010",
-                sparkRequester.getExecutorsList("application_1450721503259_0010"),
-                111L);
-
+//    public static void main(String[] args) throws IOException {
+//        CSVGenerater csvGenerater = new CSVGenerater(System.currentTimeMillis());
 //
-//        Map<Integer, List<Map<String, Object>>> tasksMap = sparkRequester.getTasksMap("application_1450721503259_0010", stageJobMap.keySet());
+//        SparkRequester sparkRequester = new SparkRequester();
 //
-//        for(int stageID : tasksMap.keySet()){
-//            int jobID = stageJobMap.get(stageID);
-//            csvGenerater.convertTasksToCSV("application_1450721503259_0010",
-//                    jobID,
-//                    stageID,
-//                    tasksMap.get(stageID),
-//                    122L
-//            );
-//        }
-    }
+//
+////        csvGenerater.convertJobsToCSV("application_1450721503259_0010",
+////                sparkRequester.getJobsList("application_1450721503259_0010"),
+////                9232L);
+//
+//
+//        HashMap<Integer, Integer> stageJobMap = csvGenerater.generateStageJobMap(
+//                sparkRequester.getJobsList("application_1450721503259_0010"));
+//
+////        csvGenerater.convertStagesToCSV("application_1450721503259_0010",
+////                stageJobMap,
+////                sparkRequester.getStagesList("application_1450721503259_0010"),
+////                9232L);
+//
+//        csvGenerater.convertExecutorsToCSV("application_1450721503259_0010",
+//                sparkRequester.getExecutorsList("application_1450721503259_0010"),
+//                111L);
+//
+////
+////        Map<Integer, List<Map<String, Object>>> tasksMap = sparkRequester.getTasksMap("application_1450721503259_0010", stageJobMap.keySet());
+////
+////        for(int stageID : tasksMap.keySet()){
+////            int jobID = stageJobMap.get(stageID);
+////            csvGenerater.convertTasksToCSV("application_1450721503259_0010",
+////                    jobID,
+////                    stageID,
+////                    tasksMap.get(stageID),
+////                    122L
+////            );
+////        }
+//    }
 
     public void generateAllCsvFiles(String appID, Map<String, String> changedConfigMap,
                                     long timeStamp) throws IOException {

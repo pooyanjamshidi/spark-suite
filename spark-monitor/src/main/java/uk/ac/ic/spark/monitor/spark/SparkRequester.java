@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor.util;
+package uk.ac.ic.spark.monitor.spark;
 
 
 import com.google.gson.*;
@@ -46,15 +46,15 @@ public class SparkRequester {
 
 
 
-    public final static void main(String[] args) throws IOException {
-        try{
-            SparkRequester sparkRequester = new SparkRequester();
-            System.out.println(sparkRequester.getAppsList());
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-    }
+//    public final static void main(String[] args) throws IOException {
+//        try{
+//            SparkRequester sparkRequester = new SparkRequester();
+//            System.out.println(sparkRequester.getAppsList());
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
 

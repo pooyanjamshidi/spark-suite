@@ -1,4 +1,4 @@
-package uk.ac.ic.spark.monitor.compress;
+package uk.ac.ic.spark.monitor.file;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.logging.log4j.LogManager;
@@ -30,13 +30,13 @@ public class ZipUtil {
         sourceFolder = CSV_PATH + appName;
         outputZip = CSV_PATH + appName + ".zip";
     }
-    public static void main(String[] args) throws ConfigurationException {
-        ConstantConfig.init();
-
-        ZipUtil appZip = new ZipUtil("application_1450721503259_0012");
-
-        appZip.zipAppCSV();
-    }
+//    public static void main(String[] args) throws ConfigurationException {
+//        ConstantConfig.init();
+//
+//        ZipUtil appZip = new ZipUtil("application_1450721503259_0012");
+//
+//        appZip.zipAppCSV();
+//    }
 
     public void zipAppCSV() {
 
