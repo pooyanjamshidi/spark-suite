@@ -93,6 +93,8 @@ public class InstantMain {
             int checkTimes = Integer.valueOf(line.getOptionValue("CT"));
 
 
+            List<String> appNameList = new ArrayList<String>();
+
             for(Map<String, String> paramsMap : combinedParams){
 
                 FileUtil.backUpAllConfigFiles();
@@ -104,15 +106,28 @@ public class InstantMain {
 //                log.info("Get application ID: application_1446044705002_0009");
 
                 SparkExec sparkExec = new SparkExec(paramsMap);
-                sparkExec.submitSparkApp(jarPath, className,
+                String appName = sparkExec.submitSparkApp(jarPath, className,
                         pollingTime, checkTimes,
                         argsList, timeEndsIndex);
 
                 FileUtil.restoreAllConfigFiles();
+
+
+                if(appName.length() != 0 && !appName.startsWith("null")){
+                    log.info("Add " + appName +" to appName list");
+                    appNameList.add(appName);
+                } else {
+                    log.warn("Ignore appName: " + appName);
+                }
 //                SparkRequester sparkRequester = new SparkRequester();
 //
 //                log.info("JobInfo: " + sparkRequester.getJobsList("application_1446044705002_0009"));
             }
+
+
+            System.out.println("Success." );
+            
+            System.out.println("CSV files for applications: " + appNameList + " have been created.");
 
         } catch( ParseException exp ) {
             // oops, something went wrong
