@@ -126,7 +126,7 @@ public class InstantMain {
 
 
             System.out.println("Success." );
-            
+
             System.out.println("CSV files for applications: " + appNameList + " have been created.");
 
         } catch( ParseException exp ) {
