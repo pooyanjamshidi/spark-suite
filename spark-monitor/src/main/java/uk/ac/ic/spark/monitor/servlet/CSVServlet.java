@@ -52,6 +52,7 @@ public class CSVServlet extends HttpServlet {
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"", downloadFile.getName());
         response.setHeader(headerKey, headerValue);
+        response.setHeader("Access-Control-Allow-Origin", "*");
 
         OutputStream outStream = response.getOutputStream();
 
