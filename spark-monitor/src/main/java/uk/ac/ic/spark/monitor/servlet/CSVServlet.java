@@ -30,7 +30,7 @@ public class CSVServlet extends HttpServlet {
         }
 
         String filePath = ConstantConfig.SPARK_USER_CSV_PATH +
-                File.separator + appName + ".zip";
+                File.separator + appName;
 
         File downloadFile = new File(filePath);
         FileInputStream inStream = new FileInputStream(downloadFile);
